@@ -8,7 +8,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>화학 퍼즐 아카데미 · Chemistry Puzzle Academy</title>
+<link rel="icon" type="image/png" href="assets/favicon-64.png"><link rel="apple-touch-icon" href="assets/icon-180.png"><meta name="description" content="원소 카드를 조합해 결합·분해·치환 반응을 배우는 교육용 화학 퍼즐 게임"><meta property="og:type" content="website"><meta property="og:title" content="화학 퍼즐 아카데미 · Chemistry Puzzle Academy"><meta property="og:description" content="원소 카드를 조합해 화합물을 만들고 화학 반응을 배워요."><meta property="og:image" content="https://i0kyung.github.io/chemistry-puzzle-academy/assets/og-image.jpg"><meta property="og:url" content="https://i0kyung.github.io/chemistry-puzzle-academy/"><meta name="twitter:card" content="summary_large_image"><title>화학 퍼즐 아카데미 · Chemistry Puzzle Academy</title>
 <style>
   :root {
     --bg: #fafafa;
@@ -64,6 +64,59 @@
     border: 0;
     color: inherit;
   }
+
+
+  /* ──────────────  Intro  ────────────── */
+  .intro-active, .intro-active body { overflow: hidden; }
+  .intro-active .reveal { animation-play-state: paused; }
+  .intro { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #0c1a3c; color: #fff; cursor: default; }
+  .intro.ready { cursor: pointer; }
+  .intro-bg { position: absolute; inset: -3%; background: url(assets/bg-wide.webp) center 42% / cover no-repeat; animation: introBg 7s cubic-bezier(.22,1,.36,1) both; }
+  @media (max-aspect-ratio: 4/5) { .intro-bg { background-image: url(assets/bg-tall.webp); background-position: center 30%; } }
+  @keyframes introBg { 0% { opacity: 0; transform: scale(1.16); filter: blur(8px) brightness(.6); } 22% { opacity: 1; filter: blur(0) brightness(1); } 100% { opacity: 1; transform: scale(1.02); filter: none; } }
+  .intro-glow { position: absolute; left: 50%; top: 46%; width: min(70vw, 70vh); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,247,200,.75) 0%, rgba(120,220,255,.28) 38%, transparent 68%); mix-blend-mode: screen; opacity: 0; animation: introGlow 3.2s ease-in-out 1s infinite; }
+  @keyframes introGlow { 0%, 100% { opacity: .15; transform: translate(-50%, -50%) scale(.92); } 50% { opacity: .55; transform: translate(-50%, -50%) scale(1.06); } }
+  .intro-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,18,48,.62) 0%, rgba(8,18,48,.08) 26%, rgba(8,18,48,0) 55%, rgba(8,18,48,.78) 100%); }
+  .intro-bubbles i { position: absolute; bottom: -40px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.95), rgba(160,225,255,.35) 45%, rgba(160,225,255,.08) 70%); box-shadow: 0 0 10px rgba(160,225,255,.45); animation: introBubble var(--t) linear var(--d) infinite; opacity: 0; }
+  @keyframes introBubble { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 12% { opacity: .9; } 50% { transform: translate(14px, -50vh) scale(1); } 100% { opacity: 0; transform: translate(-10px, -105vh) scale(1.1); } }
+  .intro-top { position: absolute; top: clamp(22px, 7vh, 72px); left: 0; right: 0; text-align: center; padding: 0 16px; }
+  .intro-title { margin: 0; font-size: clamp(34px, 7vw, 76px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.05; white-space: nowrap; }
+  .intro-title span { display: inline-block; color: #ffd23f; background: linear-gradient(180deg, #fff27a 0%, #ffc21a 55%, #ff9f0f 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 3px 0 #1d3f8f) drop-shadow(0 -2px 0 #1d3f8f) drop-shadow(2px 0 0 #1d3f8f) drop-shadow(-2px 0 0 #1d3f8f) drop-shadow(0 10px 18px rgba(8,18,48,.45)); animation: introLetter .7s cubic-bezier(.34,1.56,.64,1) backwards; animation-delay: calc(.55s + var(--i) * 70ms); }
+  .intro-title .sp { width: .3em; }
+  @keyframes introLetter { from { opacity: 0; transform: translateY(-70px) scale(.4) rotate(-12deg); } }
+  .intro-sub { margin: 10px 0 0; font-size: clamp(11px, 1.6vw, 15px); font-weight: 900; letter-spacing: .32em; color: #fff; text-shadow: 0 2px 10px rgba(8,18,48,.6); animation: introFade .7s ease 1.3s backwards; }
+  @keyframes introFade { from { opacity: 0; transform: translateY(10px); } }
+  .intro-bottom { position: absolute; left: 50%; bottom: clamp(26px, 8vh, 80px); width: min(440px, calc(100vw - 32px)); transform: translateX(-50%); text-align: center; }
+  .intro-loading { animation: introFade .6s ease 1s backwards; transition: opacity .3s ease, transform .3s ease; }
+  .intro.ready .intro-loading { opacity: 0; transform: translateY(8px); position: absolute; left: 0; right: 0; bottom: 100%; pointer-events: none; }
+  .intro-bar { height: 18px; padding: 3px; border-radius: 99px; background: rgba(12,30,74,.55); border: 2px solid rgba(255,255,255,.85); box-shadow: 0 8px 22px rgba(8,18,48,.4), inset 0 2px 6px rgba(0,0,0,.35); }
+  .intro-fill { height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, #5be0ff, #36b6ff 60%, #8ff7ff), repeating-linear-gradient(115deg, rgba(255,255,255,.35) 0 8px, transparent 8px 16px); background-blend-mode: overlay; box-shadow: 0 0 14px rgba(91,224,255,.8); }
+  .intro-label { margin: 10px 0 0; font-size: 14px; font-weight: 800; letter-spacing: .02em; text-shadow: 0 2px 8px rgba(8,18,48,.7); font-variant-numeric: tabular-nums; }
+  .intro-start { position: relative; overflow: hidden; min-width: 220px; padding: 18px 42px; border-radius: 999px; border: 3px solid #fff; background: linear-gradient(180deg, #fff27a 0%, #ffc21a 55%, #ff9f0f 100%); color: #1d2f6b; font-size: clamp(20px, 3vw, 26px); font-weight: 900; letter-spacing: -0.01em; box-shadow: 0 6px 0 #c76a00, 0 18px 36px rgba(8,18,48,.5); cursor: pointer; animation: introPop .6s cubic-bezier(.34,1.56,.64,1) both, introPulse 1.8s ease-in-out .7s infinite; }
+  .intro-start::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.75), transparent); transform: skewX(-18deg); animation: introShine 2.4s ease-in-out 1s infinite; }
+  .intro-start:hover { filter: brightness(1.05); }
+  .intro-start:active { transform: translateY(4px); box-shadow: 0 2px 0 #c76a00, 0 10px 20px rgba(8,18,48,.5); }
+  .intro-start:focus-visible { outline: 4px solid #5be0ff; outline-offset: 4px; }
+  @keyframes introPop { from { opacity: 0; transform: scale(.4); } }
+  @keyframes introPulse { 0%, 100% { scale: 1; } 50% { scale: 1.05; } }
+  @keyframes introShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+  .intro-hint { margin: 12px 0 0; font-size: 12px; font-weight: 700; opacity: .85; text-shadow: 0 2px 8px rgba(8,18,48,.7); animation: introFade .6s ease .4s backwards; }
+  .intro.leaving { animation: introOut .75s cubic-bezier(.65,0,.35,1) forwards; pointer-events: none; }
+  .intro.leaving .intro-bg { animation: introBgOut .75s cubic-bezier(.65,0,.35,1) forwards; }
+  @keyframes introOut { 60% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+  @keyframes introBgOut { to { transform: scale(1.25); filter: brightness(1.6) blur(4px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .intro-bg, .intro-title span, .intro-sub, .intro-loading, .intro-start, .intro-start::after, .intro-hint, .intro-glow, .intro.leaving .intro-bg { animation: none !important; }
+    .intro-bubbles { display: none; }
+    .intro.leaving { animation: introOut .2s linear forwards; }
+  }
+
+  /* ──────────────  Character art (home)  ────────────── */
+  .char-art { width: 88px; height: 88px; object-fit: contain; filter: drop-shadow(0 8px 12px rgba(15,23,42,.18)); transition: transform 320ms cubic-bezier(.34,1.56,.64,1); }
+  .char-art.char-art-lg { width: 170px; height: 170px; animation: charFloat 3.2s ease-in-out infinite; }
+  .element-card:hover .char-art { transform: translateY(-6px) rotate(-6deg) scale(1.08); }
+  @keyframes charFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
+  @media (prefers-reduced-motion: reduce) { .char-art.char-art-lg { animation: none; } }
 
   /* ──────────────  Loading overlay  ────────────── */
   .loader {
@@ -597,21 +650,35 @@
 .site-nav{display:flex;align-items:center;gap:32px}.site-nav a{font-size:14px;font-weight:900;color:#111318;text-decoration:none;transition:transform 180ms ease,color 180ms ease}.site-nav a:hover{transform:translateY(-2px);color:#000;text-decoration:none}
 .action-button,.part-card a,.part-card button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 20px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:#fff;color:#111318;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;box-shadow:0 6px 16px rgba(15,23,42,.06);transition:transform 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease,background 220ms ease,color 220ms ease,border-color 220ms ease}.action-button:hover,.part-card a:hover,.part-card button:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(15,23,42,.12);text-decoration:none}.action-button.primary,.part-card .primary{background:#111318;color:#fff;border-color:#111318}
 @media(max-width:640px){.site-header{padding:18px 20px}.site-nav{gap:18px}.brand-copy strong{font-size:14px}.brand-copy span{font-size:10px}}
+.brand-icon.has-art{background:none;box-shadow:none;width:40px;height:40px}.brand-icon.has-art img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(15,23,42,.18));transition:transform 260ms cubic-bezier(.34,1.56,.64,1)}.site-header .brand:hover .brand-icon.has-art img{transform:rotate(-8deg) scale(1.08)}
 </style>
 </head>
 <body>
 
-  <!-- Loading overlay (fades out automatically) -->
-  <div class="loader" id="loader">
-    <div class="loader-mark">⚗</div>
-    <div class="loader-bar"><div class="loader-fill"></div></div>
-    <div class="loader-label">Preparing the lab…</div>
+  <!-- Intro (plays on every fresh load / refresh) -->
+  <div class="intro" id="intro" role="dialog" aria-label="화학 퍼즐 아카데미 시작 화면">
+    <div class="intro-bg"></div>
+    <div class="intro-glow"></div>
+    <div class="intro-shade"></div>
+    <div class="intro-bubbles" aria-hidden="true"><i style="--x:0%;--d:0s;--s:8px;--t:5s"></i><i style="--x:61%;--d:0.37s;--s:15px;--t:8s"></i><i style="--x:22%;--d:0.74s;--s:22px;--t:6s"></i><i style="--x:83%;--d:1.1099999999999999s;--s:11px;--t:9s"></i><i style="--x:44%;--d:1.48s;--s:18px;--t:7s"></i><i style="--x:5%;--d:1.85s;--s:25px;--t:5s"></i><i style="--x:66%;--d:2.2199999999999998s;--s:14px;--t:8s"></i><i style="--x:27%;--d:2.59s;--s:21px;--t:6s"></i><i style="--x:88%;--d:2.96s;--s:10px;--t:9s"></i><i style="--x:49%;--d:3.33s;--s:17px;--t:7s"></i><i style="--x:10%;--d:3.7s;--s:24px;--t:5s"></i><i style="--x:71%;--d:0.07000000000000028s;--s:13px;--t:8s"></i><i style="--x:32%;--d:0.4399999999999995s;--s:20px;--t:6s"></i><i style="--x:93%;--d:0.8099999999999996s;--s:9px;--t:9s"></i><i style="--x:54%;--d:1.1799999999999997s;--s:16px;--t:7s"></i><i style="--x:15%;--d:1.5499999999999998s;--s:23px;--t:5s"></i></div>
+    <div class="intro-top">
+      <h1 class="intro-title" aria-label="화학 퍼즐 아카데미"><span style="--i:0">화</span><span style="--i:1">학</span><span class="sp"> </span><span style="--i:3">퍼</span><span style="--i:4">즐</span><span class="sp"> </span><span style="--i:6">아</span><span style="--i:7">카</span><span style="--i:8">데</span><span style="--i:9">미</span></h1>
+      <p class="intro-sub">CHEMISTRY PUZZLE ACADEMY</p>
+    </div>
+    <div class="intro-bottom">
+      <div class="intro-loading" id="introLoading">
+        <div class="intro-bar"><div class="intro-fill" id="introFill"></div></div>
+        <p class="intro-label" id="introLabel">실험실 준비 중… 0%</p>
+      </div>
+      <button class="intro-start" id="introStart" type="button" hidden>시작하기</button>
+      <p class="intro-hint" id="introHint" hidden>화면을 누르거나 Enter 키를 눌러도 시작해요</p>
+    </div>
   </div>
 
   <!-- Top navigation -->
   <header class="site-header reveal reveal-1">
   <a class="brand" href="loading.html" aria-label="첫 화면으로 이동">
-    <div class="brand-icon">⚗</div>
+    <div class="brand-icon has-art"><img src="assets/logo.webp" alt="" width="40" height="40"></div>
     <div class="brand-copy">
       <strong>화학 퍼즐 아카데미</strong>
       <span>CHEMISTRY PUZZLE ACADEMY</span>
@@ -673,7 +740,7 @@
         </div>
       </div>
       <div class="today-character" id="todayCharacterWrap">
-        <div class="character character-lg character-O" id="todayCharacter">O</div>
+        <img class="char-art char-art-lg" src="assets/char/O.webp" alt="산소(O) 캐릭터" width="170" height="170">
       </div>
     </article>
   </section>
@@ -768,7 +835,7 @@ function renderToday() {
 
   const wrap = document.getElementById("todayCharacterWrap");
   wrap.innerHTML =
-    `<div class="character character-lg character-${el.symbol}">${el.symbol}</div>`;
+    `<img class="char-art char-art-lg" src="assets/char/${el.symbol}.webp" alt="${el.name}(${el.symbol}) 캐릭터" width="170" height="170">`;
 }
 
 /* ─────────  Element grid  ───────── */
@@ -776,7 +843,7 @@ function renderElementGrid() {
   const grid = document.getElementById("elementGrid");
   grid.innerHTML = Object.values(ELEMENTS).map((el) => `
     <div class="element-card">
-      <div class="character character-${el.symbol}">${el.symbol}</div>
+      <img class="char-art" src="assets/char/${el.symbol}.webp" alt="${el.name}(${el.symbol}) 캐릭터" width="88" height="88" loading="lazy">
       <div class="element-meta">
         <strong>${el.name}</strong>
         <span>${el.state}</span>
@@ -798,13 +865,63 @@ function init() {
   renderToday();
   renderElementGrid();
 
-  // Hide loader after the bar fills
-  setTimeout(() => {
-    document.getElementById("loader").classList.add("hidden");
-  }, 1500);
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+/* ─────────  Intro: same sequence on every fresh load or refresh  ───────── */
+(function intro() {
+  const el = document.getElementById("intro");
+  if (!el) return;
+  const nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+  let fromGame = false;
+  try {
+    const ref = document.referrer ? new URL(document.referrer) : null;
+    fromGame = !!ref && ref.origin === location.origin && nav && nav.type === "navigate" &&
+      /\/(main|part[1-4]|collection)\.html$/.test(ref.pathname);
+  } catch (e) {}
+  if (fromGame) { el.remove(); return; }   // returning home from inside the game: skip the intro
+
+  const root = document.documentElement;
+  root.classList.add("intro-active");
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tall = window.matchMedia && matchMedia("(max-aspect-ratio: 4/5)").matches;
+  const files = ["assets/" + (tall ? "bg-tall" : "bg-wide") + ".webp", "assets/logo.webp"]
+    .concat(["H","O","C","N","Na","Cl","Cu","Zn"].map(s => "assets/char/" + s + ".webp"));
+  const fill = document.getElementById("introFill"), label = document.getElementById("introLabel");
+  const btn = document.getElementById("introStart"), hint = document.getElementById("introHint");
+  const MIN = reduce ? 300 : 2400, t0 = performance.now();
+  let loaded = 0, shown = 0, done = false;
+  files.forEach(src => { const img = new Image(); img.onload = img.onerror = () => loaded++; img.src = src; });
+  setTimeout(() => { loaded = files.length; }, 8000);   // never hang on a slow/offline image
+
+  function frame() {
+    const target = Math.min(loaded / files.length, (performance.now() - t0) / MIN);
+    shown += (target - shown) * 0.16;
+    if (target - shown < 0.004) shown = target;
+    fill.style.width = (shown * 100).toFixed(1) + "%";
+    label.textContent = shown >= 1 ? "준비 완료!" : "실험실 준비 중… " + Math.round(shown * 100) + "%";
+    if (shown >= 1) return ready();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  function ready() {
+    if (done) return; done = true;
+    el.classList.add("ready");
+    btn.hidden = false; hint.hidden = false;
+    try { btn.focus({ preventScroll: true }); } catch (e) {}
+  }
+  function enter() {
+    if (!done || el.classList.contains("leaving")) return;
+    el.classList.add("leaving");
+    root.classList.remove("intro-active");
+    setTimeout(() => el.remove(), reduce ? 220 : 780);
+  }
+  el.addEventListener("click", enter);
+  addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { if (done) { e.preventDefault(); enter(); } } });
+})();
+
 </script>
 </body>
 </html>
