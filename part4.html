@@ -1,0 +1,803 @@
+﻿<!doctype html>
+<!--
+  화학 퍼즐 아카데미 (Chemistry Puzzle Academy)
+  © 2026 민경 (@i0kyung). All rights reserved.
+  코드, 캐릭터 디자인, 이미지의 무단 복제·수정·재배포를 금합니다.
+-->
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Part 4 · 치환 반응</title><style>
+  :root {
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-soft: #f4f4f5;
+    --surface-dark: #18181b;
+    --surface-dark-soft: #27272a;
+    --border: #e8e8eb;
+    --border-strong: #d4d4d8;
+    --ink: #0a0a0a;
+    --ink-soft: #3f3f46;
+    --muted: #71717a;
+    --muted-dark: #a1a1aa;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.08);
+    --radius-sm: 12px;
+    --radius: 18px;
+    --radius-lg: 26px;
+
+    --el-H-bg:  linear-gradient(150deg, #f4fbff 0%, #b9e8ff 100%);
+    --el-H-fg:  #0d73bd;
+    --el-O-bg:  linear-gradient(150deg, #ff8a7f 0%, #e0231e 100%);
+    --el-O-fg:  #ffffff;
+    --el-C-bg:  linear-gradient(150deg, #5a626a 0%, #1a1d20 100%);
+    --el-C-fg:  #ffffff;
+    --el-N-bg:  linear-gradient(150deg, #c7adff 0%, #6a3fd0 100%);
+    --el-N-fg:  #ffffff;
+    --el-Na-bg: linear-gradient(150deg, #b285f6 0%, #7445cf 100%);
+    --el-Na-fg: #ffffff;
+    --el-Cl-bg: linear-gradient(150deg, #b1f254 0%, #54a818 100%);
+    --el-Cl-fg: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                 "Pretendard", "Malgun Gothic", system-ui, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button { font: inherit; cursor: pointer; border: 0; color: inherit; }
+
+  button:focus-visible,
+  .tile:focus-visible {
+    outline: 3px solid rgba(24, 24, 27, 0.32);
+    outline-offset: 3px;
+  }
+
+  /* ──────────────  Top nav  ────────────── */
+  .nav {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px clamp(16px, 3vw, 32px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--surface-dark);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+  }
+  .brand small {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  .nav-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .nav-btn {
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-btn:hover {
+    background: #fff;
+    border-color: var(--ink-soft);
+  }
+  .nav-btn-dark {
+    background: var(--surface-dark);
+    color: #fff;
+    border-color: var(--surface-dark);
+  }
+  .nav-btn-dark:hover {
+    background: #000;
+    border-color: #000;
+  }
+
+  /* ──────────────  Mode bar  ────────────── */
+  .mode-bar {
+    max-width: 1280px;
+    margin: 0 auto 16px;
+    padding: 0 clamp(16px, 3vw, 32px);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .mode-pills {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 4px;
+  }
+  .mode-pill {
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .mode-pill.active {
+    background: var(--surface-dark);
+    color: #fff;
+  }
+  .mode-pill:hover:not(.active) {
+    color: var(--ink);
+  }
+  .mode-meta {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .mode-meta strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* ──────────────  Game shell  ────────────── */
+  .shell {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 32px) clamp(40px, 6vw, 64px);
+  }
+
+  /* status bar */
+  .status-bar {
+    background: var(--surface-dark);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    box-shadow: var(--shadow);
+  }
+  .mission {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #fff;
+    min-width: 0;
+  }
+  .mission small {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    margin-bottom: 4px;
+  }
+  .status-chip {
+    padding: 8px 14px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.10);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .status-chip-dot {
+    width: 6px; height: 6px; border-radius: 99px;
+    background: #fff;
+  }
+  .status-chip-wrong .status-chip-dot { background: #f87171; }
+
+  /* time track */
+  .time-track {
+    grid-column: 1 / -1;
+    height: 6px;
+    border-radius: 99px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.14);
+    margin-top: 2px;
+    display: none;
+  }
+  .time-track.visible { display: block; }
+  .time-track.danger { animation: shake 0.18s infinite alternate; }
+  @keyframes shake {
+    from { transform: translateX(-1px); }
+    to   { transform: translateX(1px); }
+  }
+  .time-fill {
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    transition: width 0.2s linear, background 0.2s ease;
+  }
+
+  /* layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr) 300px;
+    gap: 14px;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .panel-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+
+  /* lesson (left) */
+  .message {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+    font-size: 14px;
+    white-space: pre-line;
+    min-height: 110px;
+  }
+  .message.success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #14532d;
+  }
+  .message.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #7f1d1d;
+  }
+  .reaction-info {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background: var(--surface-soft);
+    border-radius: var(--radius-sm);
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-line;
+  }
+  .reaction-info strong {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  /* board (center) */
+  .board-panel {
+    padding: clamp(14px, 2vw, 22px);
+    position: relative;
+    overflow: hidden;
+    min-height: 460px;
+    display: flex;
+    flex-direction: column;
+  }
+  .board-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .board-legend {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .board {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    flex: 1;
+    align-content: center;
+  }
+
+  /* tile */
+  .tile {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    min-width: 0;
+    border-radius: 22px;
+    border: 2px solid transparent;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    user-select: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border 0.16s ease, opacity 0.16s ease;
+    box-shadow:
+      inset 0 8px 14px rgba(255, 255, 255, 0.32),
+      inset 0 -10px 16px rgba(0, 0, 0, 0.16),
+      0 6px 18px rgba(0, 0, 0, 0.10);
+  }
+  .tile::before, .tile::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0a0a0a;
+    top: 30%;
+  }
+  .tile::before { left: 30%; }
+  .tile::after  { right: 30%; }
+  .tile .symbol {
+    font-weight: 900;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-top: 14px;
+  }
+  .tile .name {
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0.85;
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+  .tile:hover { transform: translateY(-2px); }
+  .tile.selected {
+    border-color: var(--surface-dark);
+    box-shadow:
+      0 0 0 3px rgba(24, 24, 27, 0.10),
+      inset 0 8px 14px rgba(255, 255, 255, 0.32),
+      inset 0 -10px 16px rgba(0, 0, 0, 0.16),
+      0 10px 22px rgba(0, 0, 0, 0.16);
+  }
+  .tile.consumed {
+    opacity: 0.28;
+    pointer-events: none;
+    filter: grayscale(0.5);
+  }
+
+  .tile.H  { background: var(--el-H-bg);  color: var(--el-H-fg); }
+  .tile.O  { background: var(--el-O-bg);  color: var(--el-O-fg); }
+  .tile.C  { background: var(--el-C-bg);  color: var(--el-C-fg); }
+  .tile.N  { background: var(--el-N-bg);  color: var(--el-N-fg); }
+  .tile.Na { background: var(--el-Na-bg); color: var(--el-Na-fg); border-radius: 16px; }
+  .tile.Cl { background: var(--el-Cl-bg); color: var(--el-Cl-fg); }
+
+  /* animation layer */
+  .anim-layer {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .floating-compound {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    min-width: 180px;
+    padding: 18px 22px;
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-lg);
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+  }
+  .floating-compound strong {
+    display: block;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+  .floating-compound span {
+    display: block;
+    font-weight: 700;
+    font-size: 13px;
+    opacity: 0.95;
+  }
+  .move-down-flow    { animation-name: downFlow; }
+  .move-up           { animation-name: upRise; }
+  .move-up-spread    { animation-name: upSpread; }
+  .move-down-settle  { animation-name: downSettle; }
+  @keyframes downFlow {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    25%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, 80%) scale(0.95); }
+  }
+  @keyframes upRise {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    25%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -160%) scale(0.9); }
+  }
+  @keyframes upSpread {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    25%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-32%, -170%) scale(1.22); filter: blur(2px); }
+  }
+  @keyframes downSettle {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    25%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    78%  { opacity: 1; transform: translate(-50%, 60%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, 60%) scale(1); }
+  }
+
+  /* control (right) */
+  .selected-box {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    min-height: 52px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+  .selected-box .placeholder { color: var(--muted); font-weight: 500; }
+  .selected-chip {
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--surface-dark);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .selected-plus {
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .tool-stack {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .tool-btn {
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--surface-soft);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+  .tool-btn:hover {
+    background: #fff;
+    border-color: var(--border-strong);
+  }
+  .tool-btn-primary {
+    background: var(--surface-dark);
+    color: #fff;
+    border-color: var(--surface-dark);
+  }
+  .tool-btn-primary:hover {
+    background: #000;
+    border-color: #000;
+    transform: translateY(-1px);
+  }
+
+  .log-box {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .log-box strong {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .log-empty { color: var(--muted); }
+
+  /* modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    place-items: center;
+    z-index: 50;
+    padding: 16px;
+  }
+  .modal-backdrop.visible { display: grid; }
+  .modal {
+    width: min(560px, 100%);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .modal-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .modal-tag.success {
+    background: #f0fdf4; color: var(--success);
+  }
+  .modal-tag.fail {
+    background: #fef2f2; color: var(--danger);
+  }
+  .modal h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+  .modal-reason {
+    margin: 0 0 18px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+  .result-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 20px;
+  }
+  .result-card {
+    min-width: 100px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    color: #fff;
+    box-shadow: var(--shadow);
+  }
+  .result-card strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .result-card span {
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.92;
+  }
+  .equation-list {
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 14px 0 18px;
+    font-size: 13px;
+  }
+  .equation-list strong {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .modal-actions .tool-btn {
+    flex: 1;
+    min-width: 130px;
+  }
+
+  /* responsive */
+  @media (max-width: 1080px) {
+    .layout { grid-template-columns: 1fr; }
+    .board-panel { min-height: 380px; }
+    .board { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  }
+  @media (max-width: 620px) {
+    .status-bar { grid-template-columns: 1fr; }
+    .board { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+    .tile .name { display: none; }
+    .tile::before, .tile::after { top: 32%; }
+    .tile .symbol { margin-top: 8px; }
+  }
+
+  .loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:100;transition:opacity .6s ease,visibility .6s ease}
+  .loader.hidden{opacity:0;visibility:hidden;pointer-events:none}.loader-mark{width:64px;height:64px;border-radius:18px;background:var(--surface-dark);color:#fff;display:grid;place-items:center;font-size:30px;box-shadow:var(--shadow-lg);animation:labFloat 1.2s ease-in-out infinite}.loader-bar{width:220px;height:4px;background:var(--border);border-radius:99px;overflow:hidden}.loader-fill{height:100%;width:0;background:var(--surface-dark);border-radius:inherit;animation:labLoad 1.45s ease forwards}.loader-label{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:700}@keyframes labFloat{50%{transform:translateY(-6px)}}@keyframes labLoad{to{width:100%}}
+  .tile.Cu,.mini-character.Cu{background:linear-gradient(150deg,#f8b76b 0%,#a64d20 100%);color:#fff}.tile.Ag,.tile.Ag2O,.tile.AgNO3,.mini-character.Ag,.mini-character.Ag2O,.mini-character.AgNO3{background:linear-gradient(150deg,#ffffff 0%,#b8bec8 100%);color:#334155}.tile.Zn,.tile.ZnCl2,.mini-character.Zn,.mini-character.ZnCl2{background:linear-gradient(150deg,#d9edf5 0%,#7896a8 100%);color:#263846}.tile.Mg,.tile.MgCl2,.tile.MgNO32,.mini-character.Mg,.mini-character.MgCl2,.mini-character.MgNO32{background:linear-gradient(150deg,#ffffff 0%,#d7dde5 100%);color:#334155}
+  .tile.H2,.tile.H2O,.mini-character.H2,.mini-character.H2O{background:linear-gradient(150deg,#f4fbff 0%,#8fd6ff 100%);color:#0d73bd}.tile.O2,.mini-character.O2{background:linear-gradient(150deg,#ff8a7f 0%,#e0231e 100%);color:#fff}.tile.H2O2,.mini-character.H2O2{background:linear-gradient(150deg,#dff6ff 0%,#ffd0cf 100%);color:#394150}.tile.CO2,.mini-character.CO2{background:linear-gradient(150deg,#69717a 0%,#202326 100%);color:#fff}.tile.NH3,.mini-character.NH3{background:linear-gradient(150deg,#d7c3ff 0%,#7b4de0 100%);color:#fff}.tile.NaCl,.tile.HCl,.mini-character.NaCl,.mini-character.HCl{background:linear-gradient(150deg,#c7f77b 0%,#58a91d 100%);color:#fff}.tile.CuO,.tile.CuCl2,.tile.CuNO32,.mini-character.CuO,.mini-character.CuCl2,.mini-character.CuNO32{background:linear-gradient(150deg,#f8b76b 0%,#a64d20 100%);color:#fff}.tile.NaHCO3,.tile.Na2CO3,.mini-character.NaHCO3,.mini-character.Na2CO3{background:linear-gradient(150deg,#fffdf2 0%,#eadfbf 100%);color:#3f3f46}.tile.HNO3,.mini-character.HNO3{background:linear-gradient(150deg,#ffd6d0 0%,#ef5950 100%);color:#fff}
+  .mini-character.H{background:var(--el-H-bg);color:var(--el-H-fg)}.mini-character.O{background:var(--el-O-bg);color:var(--el-O-fg)}.mini-character.C{background:var(--el-C-bg);color:var(--el-C-fg)}.mini-character.N{background:var(--el-N-bg);color:var(--el-N-fg)}.mini-character.Na{background:var(--el-Na-bg);color:var(--el-Na-fg);border-radius:16px}.mini-character.Cl{background:var(--el-Cl-bg);color:var(--el-Cl-fg)}
+  .page-hero{max-width:1180px;margin:0 auto;padding:clamp(40px,7vw,92px) clamp(20px,4vw,40px) 36px;text-align:center}.page-hero h1{margin:0 auto 18px;max-width:920px;font-size:clamp(36px,6vw,72px);line-height:1.04;letter-spacing:-.055em}.page-hero p{margin:0 auto;max-width:620px;color:var(--ink-soft);line-height:1.65}.hero-actions,.part-actions{display:inline-flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:28px}.section{max-width:1180px;margin:0 auto 30px;padding:0 clamp(20px,4vw,40px)}.section-head{display:flex;justify-content:space-between;align-items:end;gap:14px;margin-bottom:16px}.section-head h2{margin:0;font-size:22px;letter-spacing:-.03em}.section-head p{margin:0;color:var(--muted);font-size:13px}.intro-grid,.part-grid,.collection-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.part-grid{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .intro-card,.part-card,.detail-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease}.intro-card:hover,.intro-card.active,.part-card:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:var(--shadow)}.mini-character{position:relative;width:76px;height:76px;border-radius:22px;margin:0 auto 12px;display:grid;place-items:center;font-size:24px;font-weight:900;box-shadow:inset 0 8px 14px rgba(255,255,255,.32),inset 0 -10px 16px rgba(0,0,0,.16),0 6px 18px rgba(0,0,0,.10)}.mini-character:before,.mini-character:after{content:"";position:absolute;width:5px;height:7px;border-radius:50%;background:#0a0a0a;top:30%}.mini-character:before{left:30%}.mini-character:after{right:30%}.part-card{text-align:left}.part-card h3{margin:8px 0;font-size:22px;letter-spacing:-.03em}.part-card p{color:var(--ink-soft);line-height:1.6}.part-nav{max-width:1280px;margin:22px auto 0;padding:0 clamp(16px,3vw,32px);display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.part-nav .nav-btn.active{background:var(--surface-dark);border-color:var(--surface-dark);color:#fff}
+  .time-track{height:10px;background:rgba(255,255,255,.18)}.time-fill{background:linear-gradient(90deg,#ffffff,#86efac)}.challenge-burst{animation:pulseWin .55s ease}@keyframes pulseWin{50%{transform:scale(1.012);box-shadow:0 0 0 4px rgba(255,255,255,.16)}}.modal{max-height:92vh;overflow:auto}.equation-list{display:none}.result-card{position:relative}.result-card:before,.result-card:after{content:"";position:absolute;width:5px;height:7px;border-radius:50%;background:#0a0a0a;top:28%}.result-card:before{left:30%}.result-card:after{right:30%}.result-card strong{padding-top:14px}.detail-grid{display:grid;gap:12px}.reaction-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}.reaction-item h3{margin:0 0 8px}.info-row{background:var(--surface-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;margin-top:8px;color:var(--ink-soft);font-size:13px;line-height:1.5}.info-row strong{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}.empty{background:var(--surface-soft);border:1px dashed var(--border-strong);border-radius:var(--radius);padding:22px;color:var(--muted);text-align:center}
+  @media(max-width:860px){.layout{grid-template-columns:1fr}.board{grid-template-columns:repeat(4,minmax(0,1fr))}.nav-actions{width:100%;overflow:auto}.nav-btn{white-space:nowrap}.section-head{align-items:start;flex-direction:column}.hero-actions .btn,.hero-actions .nav-btn{width:100%;justify-content:center}}
+
+  /* Restored toy-like board motion */
+  .tile{
+    border-radius:20px;
+    cursor:pointer;
+    position:relative;
+    box-shadow:0 10px 22px rgba(15,23,42,.14),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -10px 16px rgba(0,0,0,.16);
+    transition:transform 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease,opacity 260ms ease,filter 260ms ease,border-color 220ms ease;
+    will-change:transform,opacity,filter;
+  }
+  .tile:hover:not(.consumed){
+    transform:translateY(-6px) scale(1.025);
+    box-shadow:0 18px 34px rgba(15,23,42,.20),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -10px 16px rgba(0,0,0,.16);
+  }
+  .tile:active:not(.consumed){transform:translateY(-2px) scale(.97)}
+  .tile.selected:not(.consumed){
+    transform:translateY(-8px) scale(1.04);
+    z-index:3;
+    border-color:rgba(59,167,207,.8);
+    box-shadow:0 0 0 3px rgba(59,167,207,.28),0 20px 38px rgba(15,23,42,.22),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -10px 16px rgba(0,0,0,.16);
+  }
+  .tile.consumed{
+    opacity:.32;
+    filter:grayscale(25%) brightness(1.08) saturate(.65);
+    pointer-events:none;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:0 6px 14px rgba(15,23,42,.06),inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .tile.shake{animation:tileShake 300ms ease both}
+  @keyframes tileShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+  .floating-compound{animation-name:unlockPop;animation-duration:760ms;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+  @keyframes unlockPop{0%{opacity:0;transform:translate(-50%,-50%) translateY(12px) scale(.96)}60%{opacity:1;transform:translate(-50%,-50%) translateY(-4px) scale(1.03)}100%{opacity:0;transform:translate(-50%,-50%) translateY(-52px) scale(1)}}
+
+/* Unified clean site header */
+.site-header{max-width:1180px;margin:0 auto;padding:22px clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:18px}
+.site-header a{text-decoration:none;color:inherit}.site-header a:hover{text-decoration:none;color:inherit}
+.site-header .brand{display:flex;align-items:center;gap:12px;color:#111318;text-decoration:none}
+.brand-icon{width:36px;height:36px;border-radius:10px;background:#111318;color:#fff;display:grid;place-items:center;font-size:18px;box-shadow:0 8px 18px rgba(15,23,42,.12)}
+.brand-copy{display:flex;flex-direction:column;gap:1px;line-height:1.1}.brand-copy strong{font-size:15px;font-weight:900;letter-spacing:-.01em}.brand-copy span{font-size:11px;font-weight:700;letter-spacing:.045em;color:#6f6f78;text-transform:uppercase}
+.site-nav{display:flex;align-items:center;gap:32px}.site-nav a{font-size:14px;font-weight:900;color:#111318;text-decoration:none;transition:transform 180ms ease,color 180ms ease}.site-nav a:hover{transform:translateY(-2px);color:#000;text-decoration:none}
+.action-button,.part-card a,.part-card button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 20px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:#fff;color:#111318;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;box-shadow:0 6px 16px rgba(15,23,42,.06);transition:transform 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease,background 220ms ease,color 220ms ease,border-color 220ms ease}.action-button:hover,.part-card a:hover,.part-card button:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(15,23,42,.12);text-decoration:none}.action-button.primary,.part-card .primary{background:#111318;color:#fff;border-color:#111318}
+@media(max-width:640px){.site-header{padding:18px 20px}.site-nav{gap:18px}.brand-copy strong{font-size:14px}.brand-copy span{font-size:10px}}
+
+/* Reaction motion & in-game equations */
+.tile.tile-in{animation:tileIn 460ms cubic-bezier(.22,1,.36,1) backwards;animation-delay:calc(var(--i,0) * 14ms)}
+@keyframes tileIn{from{opacity:0;transform:translateY(14px) scale(.86)}}
+.tile.shake{box-shadow:0 0 0 3px rgba(239,68,68,.38),0 10px 22px rgba(15,23,42,.14)}
+@keyframes tileShake{0%,100%{transform:translateX(0)}15%{transform:translateX(-7px) rotate(-2deg)}35%{transform:translateX(6px) rotate(2deg)}55%{transform:translateX(-4px)}75%{transform:translateX(2px)}}
+.selected-chip.chip-new{animation:chipIn 320ms cubic-bezier(.34,1.56,.64,1) both}
+@keyframes chipIn{from{opacity:0;transform:translateY(6px) scale(.6)}}
+.anim-layer{z-index:4}
+.ghost-tile{position:absolute;margin:0;z-index:5;pointer-events:none;transition:none;will-change:transform,opacity}
+.react-ring{position:absolute;width:120px;height:120px;border-radius:50%;border:3px solid rgba(255,255,255,.95);box-shadow:0 0 0 2px rgba(59,167,207,.35),0 0 38px rgba(59,167,207,.45),inset 0 0 26px rgba(59,167,207,.35);pointer-events:none}
+.react-spark{position:absolute;width:12px;height:12px;border-radius:50%;box-shadow:0 2px 8px rgba(15,23,42,.18);pointer-events:none}
+.floating-compound.fc-js{animation:none;opacity:0;z-index:6}
+.floating-compound.compact{min-width:0;padding:12px 16px}
+.floating-compound.compact strong{font-size:24px}
+.floating-compound .coef,.result-card .coef{font-style:normal;font-weight:900;margin-right:1px;opacity:.85}
+.reaction-info .eq-row,.equation-list .eq-row{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-top:1px dashed var(--border)}
+.reaction-info .eq-row:first-of-type,.equation-list .eq-row:first-of-type{border-top:0}
+.eq-row em{flex:0 0 74px;font-style:normal;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--muted)}
+.eq-row b{font-weight:800;color:var(--ink);letter-spacing:-.01em;word-break:keep-all}
+.eq-note{display:block;margin-top:8px;padding:10px 12px;border-radius:var(--radius-sm);background:#f0f9ff;color:#0c4a6e;font-size:12.5px;line-height:1.55}
+.modal .equation-list{display:block;text-align:left;background:var(--surface-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;white-space:normal}
+.modal-backdrop.visible{animation:backdropIn 260ms ease both}
+.modal-backdrop.visible .modal{animation:modalIn 560ms cubic-bezier(.22,1,.36,1) both}
+.modal-backdrop.visible .result-card{animation:cardPop 520ms cubic-bezier(.34,1.56,.64,1) both;animation-delay:calc(160ms + var(--i,0) * 90ms)}
+.modal-backdrop.visible .equation-list{animation:fadeUp 420ms cubic-bezier(.22,1,.36,1) both;animation-delay:340ms}
+@keyframes backdropIn{from{opacity:0}}
+@keyframes modalIn{from{opacity:0;transform:translateY(26px) scale(.94)}}
+@keyframes cardPop{from{opacity:0;transform:translateY(10px) scale(.5) rotate(-6deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}}
+.tile .symbol.sym-long{font-size:clamp(15px,2.1vw,24px)}
+.tile .symbol.sym-xlong{font-size:clamp(12px,1.7vw,20px);letter-spacing:-.04em}
+@media (prefers-reduced-motion: reduce){.tile,.tile.tile-in,.tile.shake,.selected-chip.chip-new,.modal-backdrop.visible,.modal-backdrop.visible .modal,.modal-backdrop.visible .result-card,.modal-backdrop.visible .equation-list,.challenge-burst,.time-track.danger{animation:none!important;transition:none!important}}
+</style></head><body><header class="site-header">
+  <a class="brand" href="loading.html" aria-label="첫 화면으로 이동">
+    <div class="brand-icon">⚗</div>
+    <div class="brand-copy">
+      <strong>화학 퍼즐 아카데미</strong>
+      <span>CHEMISTRY PUZZLE ACADEMY</span>
+    </div>
+  </a>
+  <nav class="site-nav" aria-label="주요 이동">
+    <a href="collection.html">도감</a>
+    <a href="main.html?part=1&mode=practice">시작</a>
+  </nav>
+</header><div class="mode-bar"><div class="mode-pills"><button class="mode-pill active" data-mode="practice">연습</button><button class="mode-pill" data-mode="normal">일반</button><button class="mode-pill" data-mode="challenge">챌린지</button></div><div class="mode-meta">현재 파트 <strong>Part 4 · 치환 반응</strong></div></div><main class="shell"><div class="status-bar" id="statusBar"><div class="mission"><small id="modeLabel">연습 모드</small><span id="missionLabel">금속과 산/염 용액이 만나 생성물이 바뀌는 치환 반응을 익혀요.</span></div><div class="status-chip"><span class="status-chip-dot"></span><span id="goalLabel">조합 0 / 1</span></div><div class="status-chip status-chip-wrong"><span class="status-chip-dot"></span><span id="wrongLabel">오답 0</span></div><div class="time-track" id="timeTrack"><div class="time-fill" id="timeFill"></div></div></div><div class="layout"><aside class="panel"><h3 class="panel-title">학습 안내</h3><div class="message" id="messageBox">금속과 산/염 용액이 만나 생성물이 바뀌는 치환 반응을 익혀요.</div><div class="reaction-info" id="reactionBox"><strong>조합 정보</strong>자세한 반응식은 성공 후 도감에서 확인해요.</div></aside><section class="panel board-panel"><div class="board-head"><h3 class="panel-title" style="margin:0;">반응물 보드</h3><span class="board-legend">카드를 눌러 선택 · 다시 누르면 해제</span></div><div class="board" id="board"></div><div class="anim-layer" id="animationLayer"></div></section><aside class="panel"><h3 class="panel-title">선택한 카드</h3><div class="selected-box" id="selectedBox"><span class="placeholder">아직 없음</span></div><div class="tool-stack"><button class="tool-btn tool-btn-primary" id="combineButton">조합하기</button><button class="tool-btn" id="hintButton">힌트 보기</button><button class="tool-btn" id="clearButton">선택 초기화</button></div><div class="log-box" id="logBox"><strong>성공한 결과</strong><span class="log-empty">아직 없음</span></div></aside></div><div class="part-nav"><button class="nav-btn " onclick="location.href='part1.html'">Part 1</button><button class="nav-btn " onclick="location.href='part2.html'">Part 2</button><button class="nav-btn " onclick="location.href='part3.html'">Part 3</button><button class="nav-btn active" onclick="location.href='part4.html'">Part 4</button></div></main><div class="modal-backdrop" id="resultModal"><div class="modal"><div class="modal-tag success" id="resultTag">조합 성공</div><h2 id="resultTitle">잘했어요!</h2><p class="modal-reason" id="resultReason"></p><div class="result-cards" id="resultCards"></div><div class="equation-list" id="equationList"></div><div class="modal-actions"><button class="tool-btn tool-btn-primary" id="replayButton">다시하기</button><button class="tool-btn" onclick="location.href='collection.html'">도감 보기</button><button class="tool-btn" onclick="location.href='main.html?view=hub'">파트 선택</button></div></div></div><script>
+const META={"H":["H","수소","H"],"O":["O","산소","O"],"C":["C","탄소","C"],"N":["N","질소","N"],"Na":["Na","나트륨","Na"],"Cl":["Cl","염소","Cl"],"Cu":["Cu","구리","Cu"],"Ag":["Ag","은","Ag"],"Zn":["Zn","아연","Zn"],"Mg":["Mg","마그네슘","Mg"],"H2":["H₂","수소","H2"],"O2":["O₂","산소","O2"],"H2O":["H₂O","물","H2O"],"H2O2":["H₂O₂","과산화수소","H2O2"],"CO2":["CO₂","이산화탄소","CO2"],"NH3":["NH₃","암모니아","NH3"],"NaCl":["NaCl","염화나트륨","NaCl"],"CuO":["CuO","산화구리","CuO"],"Ag2O":["Ag₂O","산화은","Ag2O"],"NaHCO3":["NaHCO₃","탄산수소나트륨","NaHCO3"],"Na2CO3":["Na₂CO₃","탄산나트륨","Na2CO3"],"AgNO3":["AgNO₃","질산은","AgNO3"],"CuNO32":["Cu(NO₃)₂","질산구리","CuNO32"],"HCl":["HCl","염산","HCl"],"ZnCl2":["ZnCl₂","염화아연","ZnCl2"],"HNO3":["HNO₃","질산","HNO3"],"MgNO32":["Mg(NO₃)₂","질산마그네슘","MgNO32"],"CuCl2":["CuCl₂","염화구리","CuCl2"],"MgCl2":["MgCl₂","염화마그네슘","MgCl2"]},BG={"H":"var(--el-H-bg)","O":"var(--el-O-bg)","C":"var(--el-C-bg)","N":"var(--el-N-bg)","Na":"var(--el-Na-bg)","Cl":"var(--el-Cl-bg)","H2":"linear-gradient(150deg,#f4fbff 0%,#b9e8ff 100%)","O2":"linear-gradient(150deg,#ff8a7f 0%,#e0231e 100%)","H2O":"linear-gradient(150deg,#f4fbff 0%,#8fd6ff 100%)","H2O2":"linear-gradient(150deg,#dff6ff 0%,#ffd0cf 100%)","CO2":"linear-gradient(150deg,#69717a 0%,#202326 100%)","NH3":"linear-gradient(150deg,#d7c3ff 0%,#7b4de0 100%)","NaCl":"linear-gradient(150deg,#c7f77b 0%,#58a91d 100%)","HCl":"linear-gradient(150deg,#c8ff89 0%,#50a51b 100%)","ZnCl2":"linear-gradient(150deg,#c2f3d0 0%,#7896a8 100%)","MgCl2":"linear-gradient(150deg,#effff3 0%,#92cb70 100%)","Cu":"linear-gradient(150deg,#f8b76b 0%,#a64d20 100%)","CuO":"linear-gradient(150deg,#e19a5f 0%,#5f321d 100%)","CuCl2":"linear-gradient(150deg,#c67940 0%,#54a818 100%)","CuNO32":"linear-gradient(150deg,#e8a767 0%,#8a431e 100%)","Ag":"linear-gradient(150deg,#ffffff 0%,#b8bec8 100%)","Ag2O":"linear-gradient(150deg,#f3f4f6 0%,#9ca3af 100%)","AgNO3":"linear-gradient(150deg,#ffffff 0%,#c7ccd4 100%)","Zn":"linear-gradient(150deg,#d9edf5 0%,#7896a8 100%)","Mg":"linear-gradient(150deg,#ffffff 0%,#d7dde5 100%)","MgNO32":"linear-gradient(150deg,#ffffff 0%,#cfd7e2 100%)","NaHCO3":"linear-gradient(150deg,#fffdf2 0%,#eadfbf 100%)","Na2CO3":"linear-gradient(150deg,#fff9df 0%,#e5d4a7 100%)","HNO3":"linear-gradient(150deg,#ffd6d0 0%,#ef5950 100%)"},DARK=["H","H2","H2O","H2O2","Ag","Ag2O","AgNO3","Zn","Mg","MgNO32","NaHCO3","Na2CO3"],PART={"title":"Part 4","name":"치환 반응","board":["AgNO3","Cu","HCl","Zn","HNO3","Mg","CuCl2"],"stock":["AgNO3","Cu","HCl","Zn","HNO3","Mg","CuCl2"],"goalNormal":2,"mission":"반응물 카드를 계수만큼 골라, 반응성이 큰 금속이 다른 원소를 밀어내는 반응을 2개 성공해 보세요.","intro":"금속과 산/염 용액이 만나 생성물이 바뀌는 치환 반응을 익혀요.","reactions":[{"id":"p4-agno3-cu","input":["AgNO3","AgNO3","Cu"],"products":["CuNO32","Ag"],"learning":"AgNO₃ + AgNO₃ + Cu → Cu(NO₃)₂ + Ag + Ag","actual":"2AgNO₃ + Cu → Cu(NO₃)₂ + 2Ag","type":"치환 반응","hint":"질산은(AgNO₃) 카드 2장과 구리(Cu) 카드 1장을 골라요.","desc":"반응성이 큰 구리가 은 이온을 밀어내고 은이 생겼어요.","coef":{"Ag":2},"cond":"질산은 수용액","note":"구리 선 표면에 은이 달라붙고, 구리 이온(Cu²⁺)이 생겨 용액이 점점 푸른색이 돼요."},{"id":"p4-hcl-zn","input":["HCl","HCl","Zn"],"products":["ZnCl2","H2"],"learning":"HCl + HCl + Zn → ZnCl₂ + H₂","actual":"Zn + 2HCl → ZnCl₂ + H₂","type":"치환 반응","hint":"염산(HCl) 카드 2장과 아연(Zn) 카드 1장을 골라요.","desc":"아연이 수소를 밀어내며 염화아연과 수소 기체가 생겼어요.","cond":"묽은 염산","note":"아연은 수소보다 반응성이 커서 산 속 수소 이온을 밀어내요. 이때 수소 기체가 기포로 빠져나와요."},{"id":"p4-hno3-mg","input":["HNO3","HNO3","Mg"],"products":["MgNO32","H2"],"learning":"HNO₃ + HNO₃ + Mg → Mg(NO₃)₂ + H₂","actual":"Mg + 2HNO₃ → Mg(NO₃)₂ + H₂","type":"치환 반응","hint":"질산(HNO₃) 카드 2장과 마그네슘(Mg) 카드 1장을 골라요.","desc":"마그네슘이 수소를 밀어내며 질산마그네슘과 수소 기체가 생겼어요.","cond":"아주 묽은 질산","note":"질산은 보통 금속과 만나면 수소 대신 다른 기체(NO, NO₂)를 내요. 마그네슘과 아주 묽은 질산은 예외적으로 수소를 내요."},{"id":"p4-mg-cucl2","input":["Mg","CuCl2"],"products":["MgCl2","Cu"],"learning":"Mg + CuCl₂ → MgCl₂ + Cu","actual":"Mg + CuCl₂ → MgCl₂ + Cu","type":"치환 반응","hint":"마그네슘(Mg) 카드 1장과 염화구리(CuCl₂) 카드 1장을 골라요.","desc":"반응성이 큰 마그네슘이 구리 이온을 밀어내고 구리가 생겼어요.","cond":"염화구리 수용액","note":"마그네슘 표면에 붉은 구리가 생기고, 푸른색 용액의 색이 점점 옅어져요."}]};let state={mode:"practice",selected:[],made:[],madeIds:new Set(),wrong:0,goal:1,active:true,timer:null,time:75};const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],sort=a=>[...a].sort().join(",");
+function label(k){return META[k][0]}function nameOf(k){return META[k][1]}function classOf(k){return META[k][2]}function cardBg(k){return BG[k]||"var(--el-"+k+"-bg)"}function cardColor(k){return DARK.includes(k)?"#334155":"#fff"}
+function reduceMotion(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}
+function coefOf(r,k){return (r.coef&&r.coef[k])||1}
+function productLabel(r,k){const n=coefOf(r,k);return (n>1?'<i class="coef">'+n+'</i>':'')+label(k)}
+function productText(r,k){const n=coefOf(r,k);return (n>1?n:"")+label(k)}
+function equationHtml(r){return '<span class="eq-row"><em>카드 조합</em><b>'+r.learning+'</b></span><span class="eq-row"><em>실제 반응식</em><b>'+r.actual+'</b></span>'+(r.cond?'<span class="eq-row"><em>반응 조건</em><b>'+r.cond+'</b></span>':'')+(r.note?'<span class="eq-note">'+r.note+'</span>':'')}
+function shuffleArray(array){const result=[...array];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
+function uid(symbol){return (typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():symbol+"-"+Date.now()+"-"+Math.random().toString(16).slice(2)}
+function requiredAtoms(){const counts=new Map();PART.reactions.forEach(r=>(r.input||[]).forEach(symbol=>counts.set(symbol,(counts.get(symbol)||0)+1)));return [...counts].map(([symbol,count])=>({symbol,count}))}
+function createRandomBoard(requiredAtomsList,pool,boardSize){const board=[];requiredAtomsList.forEach(atom=>{for(let i=0;i<atom.count;i++)board.push({id:uid(atom.symbol),symbol:atom.symbol,consumed:false})});const fillPool=(pool&&pool.length?pool:PART.board).filter(Boolean);while(board.length<boardSize){const symbol=fillPool[Math.floor(Math.random()*fillPool.length)];board.push({id:uid(symbol),symbol,consumed:false})}return shuffleArray(board)}
+function start(mode="practice"){clearInterval(state.timer);const boardSize=Math.max(24,(PART.stock||PART.board||[]).length);state={mode,selected:[],made:[],madeIds:new Set(),ending:false,lastAdded:null,wrong:0,goal:mode==="practice"?1:mode==="normal"?PART.goalNormal:3,active:true,timer:null,time:75,board:createRandomBoard(requiredAtoms(),PART.board||PART.stock,boardSize)};$$(".mode-pill").forEach(b=>b.classList.toggle("active",b.dataset.mode===mode));$("#modeLabel").textContent=(mode==="practice"?"연습":mode==="normal"?"일반":"챌린지")+" 모드";$("#missionLabel").textContent=mode==="practice"?PART.intro:mode==="normal"?PART.mission:"제한 시간 안에 3개를 완성해 보세요.";renderBoard();updateHud();setMessage(PART.intro,"neutral");$("#reactionBox").innerHTML="<strong>조합 정보</strong>조합에 성공하면 카드 조합과 실제 반응식이 이곳에 나타나요.";$("#timeTrack").classList.toggle("visible",mode==="challenge");$("#timeFill").style.width="100%";$("#timeFill").style.background="linear-gradient(90deg,#fff,#86efac)";if(mode==="challenge"){state.timer=setInterval(()=>{state.time-=.1;const pct=Math.max(0,state.time/75*100);$("#timeFill").style.width=pct+"%";$("#timeFill").style.background=pct<25?"#f87171":pct<50?"#fbbf24":"linear-gradient(90deg,#fff,#86efac)";$("#timeTrack").classList.toggle("danger",pct<18);if(state.time<=0)finish(false,"시간이 끝났어요. 한 번 더 도전하면 더 빨라질 거예요.")},100)}}
+function renderBoard(){if(!state.board)state.board=createRandomBoard(requiredAtoms(),PART.board||PART.stock,Math.max(24,(PART.stock||PART.board||[]).length));$("#board").innerHTML=state.board.map((tile,i)=>'<button class="tile tile-in '+classOf(tile.symbol)+(tile.consumed?' consumed':'')+'" style="--i:'+i+'" data-id="'+tile.id+'" data-key="'+tile.symbol+'" type="button" '+(tile.consumed?'disabled':'')+'><span class="symbol'+(label(tile.symbol).length>6?' sym-xlong':label(tile.symbol).length>4?' sym-long':'')+'">'+label(tile.symbol)+'</span><span class="name">'+nameOf(tile.symbol)+'</span></button>').join("");$$(".tile").forEach(t=>{t.onclick=()=>toggle(t);t.addEventListener("animationend",e=>{if(e.animationName==="tileIn")t.classList.remove("tile-in")})})}
+function toggle(t){if(!state.active||state.ending||t.classList.contains("consumed"))return;const id=t.dataset.id,i=state.selected.indexOf(id);if(i>=0){state.selected.splice(i,1);state.lastAdded=null}else{state.selected.push(id);state.lastAdded=id}t.classList.toggle("selected");renderSelected()}
+function tileById(id){return state.board.find(tile=>tile.id===id)}
+function renderSelected(){if(!state.selected.length){$("#selectedBox").innerHTML='<span class="placeholder">아직 없음</span>';return}$("#selectedBox").innerHTML=state.selected.map((id,i)=>{const tile=tileById(id);if(!tile)return"";return (i?'<span class="selected-plus">+</span>':'')+'<span class="selected-chip'+(id===state.lastAdded?' chip-new':'')+'">'+label(tile.symbol)+'</span>'}).join("")}
+function shakeSelected(){state.selected.forEach(id=>{const t=$('.tile[data-id="'+id+'"]');if(t){t.classList.add("shake");setTimeout(()=>t.classList.remove("shake"),320)}})}
+function combine(){if(!state.active||state.ending)return;if(!state.selected.length){setMessage("먼저 카드를 선택해 보세요.","neutral");return}const symbols=state.selected.map(id=>tileById(id)).filter(Boolean).map(tile=>tile.symbol);const r=PART.reactions.find(x=>sort(x.input)===sort(symbols));if(!r){state.wrong++;shakeSelected();const kinds=a=>[...new Set(a)].sort().join(","),near=PART.reactions.find(x=>!state.madeIds.has(x.id)&&kinds(x.input)===kinds(symbols));setMessage(near?"△ 재료 종류는 맞았어요! 반응 전과 후의 원자 수가 같아지도록 카드 개수를 맞춰 보세요.":"× 조합이 살짝 달라요. 힌트를 보고 다시 맞춰볼까요?","error");setTimeout(()=>clearSel(false),320);updateHud();return}if(state.madeIds.has(r.id)){setMessage("이미 완성한 반응이에요. 다른 조합도 찾아보세요.","error");clearSel(false);return}success(r)}
+function success(r){const usedIds=[...state.selected];const from=usedIds.map(id=>$('.tile[data-id="'+id+'"]')).filter(Boolean).map(el=>({el,rect:el.getBoundingClientRect()}));state.made.push(r);state.madeIds.add(r.id);usedIds.forEach(id=>{const tile=tileById(id);if(tile)tile.consumed=true;const el=$('.tile[data-id="'+id+'"]');if(el){el.classList.remove("selected");el.classList.add("consumed");el.disabled=true}});record(r);animate(r,from);state.selected=[];renderSelected();updateHud();$("#statusBar").classList.add("challenge-burst");setTimeout(()=>$("#statusBar").classList.remove("challenge-burst"),600);const chip=$("#goalLabel").closest(".status-chip");if(chip&&chip.animate&&!reduceMotion())chip.animate([{transform:"scale(1)"},{transform:"scale(1.14)"},{transform:"scale(1)"}],{duration:460,easing:"cubic-bezier(.34,1.56,.64,1)"});let msg=state.mode==="challenge"?(state.made.length===1?"1개 완성! 계속 가볼까요?":state.made.length===2?"2개 완성! 거의 다 왔어요.":"성공! 제한 시간 안에 완성했어요."):"✓ 좋아요! "+r.desc;setMessage(msg,"success");$("#reactionBox").innerHTML="<strong>조합 정보</strong>"+equationHtml(r);if(state.made.length>=state.goal){state.ending=true;clearInterval(state.timer);setTimeout(()=>finish(true,state.mode==="challenge"?"성공! 제한 시간 안에 완성했어요.":r.desc),reduceMotion()?700:2100)}}
+function animate(r,from){const layer=$("#animationLayer"),box=layer.getBoundingClientRect(),cx=box.width/2,cy=box.height/2,rm=reduceMotion()||!layer.animate;let wait=0;if(!rm){from.forEach(({el,rect},i)=>{const g=el.cloneNode(true);g.classList.remove("selected","consumed","shake","tile-in");g.classList.add("ghost-tile");g.removeAttribute("disabled");const x=rect.left-box.left,y=rect.top-box.top;g.style.left=x+"px";g.style.top=y+"px";g.style.width=rect.width+"px";g.style.height=rect.height+"px";layer.appendChild(g);const dx=cx-(x+rect.width/2),dy=cy-(y+rect.height/2),tilt=(i%2?1:-1)*10;g.animate([{transform:"translate(0,-8px) scale(1.04)",opacity:1},{transform:"translate("+dx*.45+"px,"+(dy*.45-36)+"px) scale(.94) rotate("+tilt+"deg)",opacity:1,offset:.5},{transform:"translate("+dx+"px,"+dy+"px) scale(.3) rotate("+tilt*2+"deg)",opacity:.15}],{duration:560,delay:i*60,easing:"cubic-bezier(.55,0,.55,1)",fill:"forwards"}).onfinish=()=>g.remove();setTimeout(()=>g.remove(),760+i*60)});wait=520+(from.length-1)*60}setTimeout(()=>{if(!rm)reactionBurst(layer,cx,cy,r);showProducts(r,layer,rm)},wait)}
+function reactionBurst(layer,cx,cy,r){const ring=document.createElement("div");ring.className="react-ring";ring.style.left=cx+"px";ring.style.top=cy+"px";layer.appendChild(ring);ring.animate([{transform:"translate(-50%,-50%) scale(.15)",opacity:.9},{transform:"translate(-50%,-50%) scale(2.6)",opacity:0}],{duration:620,easing:"cubic-bezier(.22,1,.36,1)",fill:"forwards"}).onfinish=()=>ring.remove();setTimeout(()=>ring.remove(),800);const n=12;for(let i=0;i<n;i++){const s=document.createElement("div"),a=i/n*Math.PI*2+Math.random()*.4,d=70+Math.random()*60;s.className="react-spark";s.style.left=cx+"px";s.style.top=cy+"px";s.style.background=cardBg(r.products[i%r.products.length]);layer.appendChild(s);s.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:1},{transform:"translate(calc(-50% + "+Math.cos(a)*d+"px),calc(-50% + "+Math.sin(a)*d+"px)) scale(.2)",opacity:0}],{duration:560+Math.random()*200,easing:"cubic-bezier(.22,1,.36,1)",fill:"forwards"}).onfinish=()=>s.remove();setTimeout(()=>s.remove(),900)}}
+function showProducts(r,layer,rm){const n=r.products.length,w=layer.getBoundingClientRect().width,gap=Math.min(170,(w-40)/Math.max(n,1)),kind=r.type==="분해 반응"?"split":r.type==="치환 반응"?"swap":"merge";r.products.forEach((k,i)=>{const d=document.createElement("div"),x=(i-(n-1)/2)*gap,T=(px,py,s,rot)=>"translate(calc(-50% + "+px+"px),calc(-50% + "+py+"px)) scale("+s+") rotate("+(rot||0)+"deg)";d.className="floating-compound fc-js"+(n>1?" compact":"");d.style.background=cardBg(k);d.style.color=cardColor(k);d.innerHTML='<strong>'+productLabel(r,k)+'</strong><span>'+nameOf(k)+'</span>';layer.appendChild(d);if(rm){d.animate([{opacity:0},{opacity:1,offset:.2},{opacity:1,offset:.8},{opacity:0}],{duration:1500,fill:"forwards"}).onfinish=()=>d.remove();setTimeout(()=>d.remove(),1600);return}const start=kind==="swap"?T(-x,-40,.4,(i?1:-1)*-14):T(0,0,.3,kind==="split"?(i-(n-1)/2)*-20:0),land=kind==="split"?T(x*1.06,-6,1.06,(i-(n-1)/2)*4):T(x,0,1.1,0);d.animate([{transform:start,opacity:0,easing:"cubic-bezier(.22,1,.36,1)"},{transform:land,opacity:1,offset:.22,easing:"ease-in-out"},{transform:T(x,0,.97,0),opacity:1,offset:.3,easing:"ease-out"},{transform:T(x,0,1,0),opacity:1,offset:.38},{transform:T(x,0,1,0),opacity:1,offset:.8,easing:"cubic-bezier(.4,0,1,1)"},{transform:T(x,-70,.94,0),opacity:0}],{duration:1700,delay:i*90,easing:"linear",fill:"forwards"}).onfinish=()=>d.remove();setTimeout(()=>d.remove(),1900+i*90)})}
+function clearSel(note=true){state.selected=[];$$(".tile").forEach(t=>t.classList.remove("selected","shake"));renderSelected();if(note)setMessage("선택을 초기화했어요. 다시 골라보세요.","neutral")}
+function hint(){const next=PART.reactions.find(r=>!state.madeIds.has(r.id))||PART.reactions[0];setMessage("💡 힌트: "+next.hint,"neutral")}
+function updateHud(){$("#goalLabel").textContent="조합 "+state.made.length+" / "+state.goal;$("#wrongLabel").textContent="오답 "+state.wrong;$("#logBox").innerHTML=state.made.length?'<strong>성공한 결과</strong>'+state.made.map(r=>r.products.map(k=>productText(r,k)+" · "+nameOf(k)).join(", ")).join("<br>"):'<strong>성공한 결과</strong><span class="log-empty">아직 없음</span>'}
+function setMessage(t,tone){$("#messageBox").textContent=t;$("#messageBox").classList.remove("success","error");if(tone==="success")$("#messageBox").classList.add("success");if(tone==="error")$("#messageBox").classList.add("error")}
+function finish(ok,reason){if(!state.active)return;state.active=false;clearInterval(state.timer);const last=state.made[state.made.length-1]||PART.reactions[0];$("#resultTag").textContent=ok?"조합 성공":"다시 도전";$("#resultTag").classList.toggle("success",ok);$("#resultTag").classList.toggle("fail",!ok);$("#resultTitle").textContent=ok?"잘했어요!":"아쉬워요!";$("#resultReason").textContent=ok?reason:"힌트를 보고 다시 시도해 보세요.";$("#resultCards").innerHTML=ok?last.products.map((k,i)=>'<div class="result-card" style="--i:'+i+';background:'+cardBg(k)+';color:'+cardColor(k)+'"><strong>'+productLabel(last,k)+'</strong><span>'+nameOf(k)+'</span></div>').join(""):'<div class="result-card" style="background:#71717a"><strong>—</strong><span>다시 도전</span></div>';$("#equationList").innerHTML=ok?'<strong>이번 반응</strong>'+equationHtml(last):"";$("#resultModal").classList.add("visible")}
+function record(r){const ELEMENT_IDS=["H","O","C","N","Na","Cl","Cu","Ag","Zn","Mg"],COMPOUND_IDS=["H2O","CO2","NH3","NaCl","CuO","H2O2","Ag2O","NaHCO3","Na2CO3","AgNO3","CuNO32","HCl","ZnCl2","HNO3","MgNO32","CuCl2","MgCl2"];const getSet=k=>new Set(JSON.parse(localStorage.getItem(k)||"[]").map(v=>typeof v==="string"?v:v.id).filter(Boolean)),putSet=(k,s)=>localStorage.setItem(k,JSON.stringify([...s])),nameOfSafe=k=>META[k]?META[k][1]:k,labelOfSafe=k=>META[k]?META[k][0]:k,normalizeType=t=>t==="기초 조합"?"결합 반응":t;const elements=getSet("discoveredElements"),compounds=getSet("discoveredCompounds"),reactionTypes=getSet("discoveredReactionTypes"),legacyElements=getSet("chem_discovered_elements"),legacyCompounds=getSet("chem_discovered_compounds"),legacyReactions=getSet("chem_discovered_reactions");[...(r.input||[]),...(r.products||[])].forEach(k=>{if(ELEMENT_IDS.includes(k)){elements.add(k);legacyElements.add(k)}if(COMPOUND_IDS.includes(k)){compounds.add(k);legacyCompounds.add(k)}});const reactionType=normalizeType(r.type);reactionTypes.add(reactionType);const productNames=(r.products||[]).map(nameOfSafe).join(" · "),productFormula=(r.products||[]).map(labelOfSafe).join(" + ");const reactionRecord={id:r.id,part:PART.title,type:reactionType,name:productNames,formula:productFormula,learningEquation:r.learning,realEquation:r.actual,description:r.desc,inputIds:r.input||[],resultIds:r.products||[],productIds:r.products||[]};const records=JSON.parse(localStorage.getItem("discoveredReactions")||"[]").filter(x=>(typeof x==="string"?x:x.id)!==r.id);records.push(reactionRecord);localStorage.setItem("discoveredReactions",JSON.stringify(records));legacyReactions.add(r.id);putSet("discoveredElements",elements);putSet("discoveredCompounds",compounds);putSet("discoveredReactionTypes",reactionTypes);putSet("chem_discovered_elements",legacyElements);putSet("chem_discovered_compounds",legacyCompounds);putSet("chem_discovered_reactions",legacyReactions)}
+$$(".mode-pill").forEach(b=>b.onclick=()=>start(b.dataset.mode));$("#combineButton").onclick=combine;$("#hintButton").onclick=hint;$("#clearButton").onclick=()=>clearSel(true);$("#replayButton").onclick=()=>{$("#resultModal").classList.remove("visible");start(state.mode)};start((m=>["practice","normal","challenge"].includes(m)?m:"practice")(new URLSearchParams(location.search).get("mode")));
+</script></body></html>
+
+
+
+
+
+
+
+

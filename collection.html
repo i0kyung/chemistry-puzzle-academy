@@ -1,0 +1,158 @@
+﻿<!doctype html>
+<!--
+  화학 퍼즐 아카데미 (Chemistry Puzzle Academy)
+  © 2026 민경 (@i0kyung). All rights reserved.
+  코드, 캐릭터 디자인, 이미지의 무단 복제·수정·재배포를 금합니다.
+-->
+
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>도감 · 화학 퍼즐 아카데미</title>
+<style>
+:root{
+  --bg:#fafafa;--surface:#fff;--surface-soft:#f4f4f5;--ink:#0a0a0a;--ink-soft:#3f3f46;--muted:#71717a;--border:#e8e8eb;--border-strong:#d4d4d8;--dark:#18181b;--shadow:0 10px 30px rgba(0,0,0,.04);--shadow-lg:0 18px 44px rgba(0,0,0,.08);
+  --el-H-bg:linear-gradient(150deg,#f4fbff 0%,#b9e8ff 100%);--el-H-fg:#0d73bd;--el-O-bg:linear-gradient(150deg,#ff8a7f 0%,#e0231e 100%);--el-O-fg:#fff;--el-C-bg:linear-gradient(150deg,#5a626a 0%,#1a1d20 100%);--el-C-fg:#fff;--el-N-bg:linear-gradient(150deg,#c7adff 0%,#6a3fd0 100%);--el-N-fg:#fff;--el-Na-bg:linear-gradient(150deg,#b285f6 0%,#7445cf 100%);--el-Na-fg:#fff;--el-Cl-bg:linear-gradient(150deg,#b1f254 0%,#54a818 100%);--el-Cl-fg:#fff;
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Malgun Gothic",system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}button{font:inherit;color:inherit;cursor:pointer;border:0}a{color:inherit;text-decoration:none}a:hover,a:focus{text-decoration:none;color:inherit}.nav{max-width:1280px;margin:0 auto;padding:18px clamp(16px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:15px;letter-spacing:-.01em;color:var(--ink);text-decoration:none}.brand-mark{width:38px;height:38px;border-radius:12px;background:var(--dark);color:#fff;display:grid;place-items:center;font-size:18px;box-shadow:0 10px 24px rgba(0,0,0,.08)}.brand small{display:block;margin-top:1px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.055em;text-transform:uppercase}.nav-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.nav-btn{height:40px;padding:0 15px;border-radius:999px;background:var(--surface);border:1px solid var(--border-strong);font-size:13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;transition:transform .15s ease,border-color .15s ease,background .15s ease}.nav-btn:hover{transform:translateY(-1px);border-color:var(--ink-soft);text-decoration:none}.nav-btn-dark{background:var(--dark);color:#fff;border-color:var(--dark)}.nav-btn-dark:hover{background:#000;color:#fff;border-color:#000}.shell{max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,40px) 84px}.hero{padding:clamp(54px,8vw,104px) 0 34px;text-align:center}.eyebrow{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 16px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);box-shadow:0 8px 22px rgba(0,0,0,.03)}.hero h1{margin:18px 0 8px;font-size:clamp(56px,9vw,108px);line-height:.94;font-weight:950;letter-spacing:0}.hero .subtitle{margin:0;color:var(--muted);font-size:clamp(20px,3vw,30px);font-style:italic;font-weight:700}.hero .desc{max-width:710px;margin:18px auto 0;color:var(--ink-soft);font-size:16px;line-height:1.75}.stats-card{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{min-height:108px;border:1px solid var(--border);border-radius:20px;background:#fff;padding:18px;display:flex;flex-direction:column;justify-content:space-between}.stat small{color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.05em}.stat strong{font-size:34px;line-height:1;font-weight:950;letter-spacing:0}.reset-btn{height:46px;padding:0 18px;border-radius:999px;background:var(--surface-soft);border:1px solid var(--border);font-weight:900;font-size:13px;white-space:nowrap}.reset-btn:hover{background:#fff;border-color:var(--border-strong)}.section{margin-top:72px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:20px}.section-kicker{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--muted);text-transform:uppercase}.section h2{margin:4px 0 0;font-size:clamp(28px,4vw,42px);letter-spacing:0;line-height:1.1}.section-count{padding:8px 14px;border-radius:999px;background:#fff;border:1px solid var(--border);color:var(--ink-soft);font-size:13px;font-weight:900;white-space:nowrap}.element-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.compound-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.reaction-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.type-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}.element-card{min-height:308px;padding:28px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}.compound-card{min-height:350px;padding:24px}.reaction-card,.type-card{padding:24px}.badge{position:absolute;right:18px;top:18px;width:32px;height:32px;border-radius:999px;display:grid;place-items:center;font-weight:950}.badge.check{background:var(--dark);color:#fff}.badge.lock{width:28px;height:28px;background:#fff;border:1px solid var(--border-strong);color:var(--muted);font-size:13px}.locked{background:#f4f4f5;border-style:dashed;opacity:.64;box-shadow:none}.character{position:relative;width:112px;height:112px;border-radius:28px;display:grid;place-items:center;margin:0 auto 22px;font-size:38px;font-weight:950;box-shadow:inset 0 10px 16px rgba(255,255,255,.34),inset 0 -12px 18px rgba(0,0,0,.16),0 10px 22px rgba(0,0,0,.10)}.character:before,.character:after,.visual:before,.visual:after{content:"";position:absolute;width:6px;height:8px;border-radius:50%;background:#0a0a0a;top:31%}.character:before,.visual:before{left:31%}.character:after,.visual:after{right:31%}.character.unknown{background:linear-gradient(150deg,#fff,#e4e4e7);color:#a1a1aa;box-shadow:inset 0 8px 12px rgba(255,255,255,.8),0 8px 18px rgba(0,0,0,.04)}.element-card h3,.type-card h3{margin:0 0 8px;font-size:22px;letter-spacing:0}.element-status{margin:0 0 12px;color:var(--muted);font-size:13px;font-weight:900}.element-card p,.compound-card p,.reaction-card p,.type-card p{margin:0;color:var(--ink-soft);line-height:1.6;font-size:14px}.visual{position:relative;height:168px;border-radius:22px;margin-bottom:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:inset 0 10px 16px rgba(255,255,255,.28),inset 0 -12px 18px rgba(0,0,0,.16)}.visual strong{font-size:clamp(38px,5vw,54px);font-weight:950;letter-spacing:0;line-height:1;margin-top:20px}.visual span{margin-top:8px;font-size:15px;font-weight:900}.visual.unknown{background:linear-gradient(150deg,#fff,#e4e4e7);color:#a1a1aa}.compound-info{display:grid;gap:12px}.label{display:block;margin-bottom:5px;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.09em;text-transform:uppercase}.equation{display:block;border:1px solid var(--border);background:var(--surface-soft);border-radius:16px;padding:13px 14px;color:var(--ink);font-weight:900;line-height:1.45}.reaction-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.pill{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:var(--dark);color:#fff;font-size:12px;font-weight:900}.part{color:var(--muted);font-size:12px;font-weight:900}.reaction-card h3{margin:0 0 12px;font-size:21px;line-height:1.25}.reaction-lines{display:grid;gap:10px}.linebox{border:1px solid var(--border);border-radius:16px;padding:12px 14px;background:#fff}.linebox.real{background:var(--surface-soft)}.linebox strong{display:block;margin-bottom:4px;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}.linebox span{font-weight:850;line-height:1.45}.type-card{min-height:220px;display:flex;flex-direction:column;gap:14px}.type-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.type-icon{width:38px;height:38px;border-radius:999px;background:var(--dark);color:#fff;display:grid;place-items:center;font-weight:950}.type-card.locked .type-icon{background:#fff;color:var(--muted);border:1px solid var(--border-strong)}.type-example{margin-top:auto}.bottom-cta{margin-top:76px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.cta{height:56px;min-width:156px;padding:0 26px;border-radius:999px;font-weight:950;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-strong);background:#fff}.cta.primary{background:var(--dark);border-color:var(--dark);color:#fff}.cta:hover{transform:translateY(-1px);text-decoration:none}.empty-note{grid-column:1/-1;border:1px dashed var(--border-strong);border-radius:24px;background:var(--surface-soft);padding:28px;text-align:center;color:var(--muted);font-weight:800}.H{background:var(--el-H-bg);color:var(--el-H-fg)}.O{background:var(--el-O-bg);color:var(--el-O-fg)}.C{background:var(--el-C-bg);color:var(--el-C-fg)}.N{background:var(--el-N-bg);color:var(--el-N-fg)}.Na{background:var(--el-Na-bg);color:var(--el-Na-fg);border-radius:22px}.Cl{background:var(--el-Cl-bg);color:var(--el-Cl-fg)}.Cu,.CuO,.CuCl2,.CuNO32{background:linear-gradient(150deg,#f8b76b 0%,#a64d20 100%);color:#fff}.Ag,.Ag2O,.AgNO3{background:linear-gradient(150deg,#fff 0%,#b8bec8 100%);color:#334155}.Zn,.ZnCl2{background:linear-gradient(150deg,#d9edf5 0%,#7896a8 100%);color:#263846}.Mg,.MgCl2,.MgNO32{background:linear-gradient(150deg,#fff 0%,#d7dde5 100%);color:#334155}.H2O{background:linear-gradient(150deg,#f4fbff 0%,#8fd6ff 100%);color:#0d73bd}.H2O2{background:linear-gradient(150deg,#dff6ff 0%,#ffd0cf 100%);color:#394150}.CO2{background:linear-gradient(150deg,#69717a 0%,#202326 100%);color:#fff}.NH3{background:linear-gradient(150deg,#d7c3ff 0%,#7b4de0 100%);color:#fff}.NaCl,.HCl{background:linear-gradient(150deg,#c7f77b 0%,#58a91d 100%);color:#fff}.NaHCO3,.Na2CO3{background:linear-gradient(150deg,#fffdf2 0%,#eadfbf 100%);color:#3f3f46}.HNO3{background:linear-gradient(150deg,#ffd6d0 0%,#ef5950 100%);color:#fff}@media(max-width:940px){.stats-card{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.element-grid,.compound-grid,.reaction-grid,.type-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.reset-btn{justify-self:start}}@media(max-width:640px){.nav-actions{width:100%;overflow:auto;flex-wrap:nowrap}.nav-btn{white-space:nowrap}.hero{padding-top:42px}.stats-grid,.element-grid,.compound-grid,.reaction-grid,.type-grid{grid-template-columns:1fr}.section{margin-top:56px}.section-head{align-items:start;flex-direction:column}.element-card{min-height:282px}.compound-card{min-height:320px}.cta{width:100%}}
+
+/* Restored collection card depth and entrance motion */
+@keyframes cardFadeUp{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes unlockPop{0%{opacity:0;transform:translateY(12px) scale(.96)}60%{opacity:1;transform:translateY(-4px) scale(1.03)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.card{overflow:visible;transition:transform 260ms cubic-bezier(.22,1,.36,1),box-shadow 260ms ease,border-color 260ms ease;animation:cardFadeUp 420ms cubic-bezier(.22,1,.36,1) both}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 44px rgba(15,23,42,.14);border-color:rgba(15,23,42,.14)}
+.compound-card{position:relative;border-radius:22px;padding:30px;background:#fff;border:1px solid rgba(15,23,42,.08);box-shadow:0 10px 28px rgba(15,23,42,.08);overflow:visible}
+.compound-card.locked{opacity:1;background:linear-gradient(180deg,#fbfbfc,#f3f3f5);border-color:rgba(15,23,42,.08);box-shadow:0 10px 24px rgba(15,23,42,.05)}
+.badge{top:20px;right:20px;z-index:5;transform:none;overflow:visible;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+.badge.check{width:34px;height:34px;background:#111318;color:#fff;border-radius:999px}
+.badge.lock{top:20px;right:20px;width:30px;height:30px;background:#fff;border:1px solid rgba(15,23,42,.12);box-shadow:0 8px 18px rgba(15,23,42,.10)}
+.visual.unknown{background:linear-gradient(180deg,#f8f8f9,#eeeeef);color:#9ca3af;opacity:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 18px rgba(15,23,42,.05)}
+.compound-card.locked .compound-info,.compound-card.locked p{color:#9ca3af}
+.compound-card.locked .equation{background:#f1f1f2;color:#9ca3af;border-color:#e2e2e5}
+
+/* Unified clean site header */
+.site-header{max-width:1180px;margin:0 auto;padding:22px clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:18px}
+.site-header a{text-decoration:none;color:inherit}.site-header a:hover{text-decoration:none;color:inherit}
+.site-header .brand{display:flex;align-items:center;gap:12px;color:#111318;text-decoration:none}
+.brand-icon{width:36px;height:36px;border-radius:10px;background:#111318;color:#fff;display:grid;place-items:center;font-size:18px;box-shadow:0 8px 18px rgba(15,23,42,.12)}
+.brand-copy{display:flex;flex-direction:column;gap:1px;line-height:1.1}.brand-copy strong{font-size:15px;font-weight:900;letter-spacing:-.01em}.brand-copy span{font-size:11px;font-weight:700;letter-spacing:.045em;color:#6f6f78;text-transform:uppercase}
+.site-nav{display:flex;align-items:center;gap:32px}.site-nav a{font-size:14px;font-weight:900;color:#111318;text-decoration:none;transition:transform 180ms ease,color 180ms ease}.site-nav a:hover{transform:translateY(-2px);color:#000;text-decoration:none}
+.action-button,.part-card a,.part-card button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 20px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:#fff;color:#111318;font-size:14px;font-weight:800;text-decoration:none;cursor:pointer;box-shadow:0 6px 16px rgba(15,23,42,.06);transition:transform 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms ease,background 220ms ease,color 220ms ease,border-color 220ms ease}.action-button:hover,.part-card a:hover,.part-card button:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(15,23,42,.12);text-decoration:none}.action-button.primary,.part-card .primary{background:#111318;color:#fff;border-color:#111318}
+@media(max-width:640px){.site-header{padding:18px 20px}.site-nav{gap:18px}.brand-copy strong{font-size:14px}.brand-copy span{font-size:10px}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="loading.html" aria-label="첫 화면으로 이동">
+    <div class="brand-icon">⚗</div>
+    <div class="brand-copy">
+      <strong>화학 퍼즐 아카데미</strong>
+      <span>CHEMISTRY PUZZLE ACADEMY</span>
+    </div>
+  </a>
+  <nav class="site-nav" aria-label="주요 이동">
+    <a href="collection.html">도감</a>
+    <a href="main.html?part=1&mode=practice">시작</a>
+  </nav>
+</header>
+<main class="shell">
+  <section class="hero">
+    <div class="eyebrow">발견 기록 · DISCOVERY</div>
+    <h1>도감</h1>
+    <p class="subtitle">발견한 원소와 화합물</p>
+    <p class="desc">게임에서 직접 만든 조합이 이곳에 차곡차곡 쌓여요. 잠긴 카드는 보드에서 직접 조합해 잠금을 풀어보세요.</p>
+  </section>
+  <section class="stats-card" aria-label="발견 통계">
+    <div class="stats-grid" id="statsGrid"></div>
+    <button class="reset-btn" id="resetButton">기록 초기화</button>
+  </section>
+  <section class="section"><div class="section-head"><div><div class="section-kicker">ELEMENTS</div><h2>원소 도감</h2></div><div class="section-count" id="elementCount"></div></div><div class="element-grid" id="elements"></div></section>
+  <section class="section"><div class="section-head"><div><div class="section-kicker">COMPOUNDS</div><h2>화합물 도감</h2></div><div class="section-count" id="compoundCount"></div></div><div class="compound-grid" id="compounds"></div></section>
+  <section class="section"><div class="section-head"><div><div class="section-kicker">REACTIONS</div><h2>성공한 반응식</h2></div><div class="section-count" id="reactionCount"></div></div><div class="reaction-grid" id="reactions"></div></section>
+  <section class="section"><div class="section-head"><div><div class="section-kicker">REACTION TYPES</div><h2>반응 유형</h2></div><div class="section-count" id="typeCount"></div></div><div class="type-grid" id="types"></div></section>
+  <div class="bottom-cta"><a class="cta primary" href="main.html">조합하러 가기</a><a class="cta" href="loading.html">처음으로</a></div>
+</main>
+<script>
+const ELEMENTS=[
+  {id:"H",formula:"H",name:"수소",state:"가벼운 기초 원소",desc:"물과 여러 화합물의 시작점이 되는 아주 가벼운 원소예요."},
+  {id:"O",formula:"O",name:"산소",state:"연소를 돕는 원소",desc:"물, 산화물, 이산화탄소처럼 많은 반응에 등장해요."},
+  {id:"C",formula:"C",name:"탄소",state:"생명의 중심 원소",desc:"산소와 만나 이산화탄소를 만들 수 있어요."},
+  {id:"N",formula:"N",name:"질소",state:"공기 속 주요 원소",desc:"수소와 만나 암모니아를 만드는 조합에 쓰여요."},
+  {id:"Na",formula:"Na",name:"나트륨",state:"활발한 금속 원소",desc:"염소와 만나 염화나트륨을 만들어요."},
+  {id:"Cl",formula:"Cl",name:"염소",state:"황록색 비금속 원소",desc:"나트륨·구리·마그네슘·아연과 염화물을 만들고, 수소와는 염화수소를 만들어요."},
+  {id:"Cu",formula:"Cu",name:"구리",state:"붉은빛 금속 원소",desc:"산소와 결합하거나 치환 반응에 참여해요."},
+  {id:"Ag",formula:"Ag",name:"은",state:"밝은 금속 원소",desc:"질산은 반응과 산화은 분해에서 발견할 수 있어요."},
+  {id:"Zn",formula:"Zn",name:"아연",state:"치환 반응 금속",desc:"염산과 만나 염화아연과 수소를 만들어요."},
+  {id:"Mg",formula:"Mg",name:"마그네슘",state:"반응성 금속",desc:"질산이나 염화구리와의 치환 반응에 등장해요."}
+];
+const COMPOUNDS=[
+  {id:"H2O",formula:"H₂O",name:"물",combo:"H + H + O → H₂O",desc:"수소 둘과 산소 하나가 만나서 물이 되었어요."},
+  {id:"CO2",formula:"CO₂",name:"이산화탄소",combo:"C + O + O → CO₂",desc:"탄소가 연소할 때 생기는 기체예요. 공기보다 무거워 아래로 가라앉아요."},
+  {id:"NH3",formula:"NH₃",name:"암모니아",combo:"N + H + H + H → NH₃",desc:"질소와 수소가 결합해 만들어지는 화합물이에요."},
+  {id:"NaCl",formula:"NaCl",name:"염화나트륨",combo:"Na + Cl → NaCl",desc:"Na⁺와 Cl⁻ 이온으로 이루어진 화합물로, 소금의 주성분이에요."},
+  {id:"CuO",formula:"CuO",name:"산화구리",combo:"Cu + O → CuO",desc:"구리와 산소가 결합해 생기는 산화물이에요."},
+  {id:"H2O2",formula:"H₂O₂",name:"과산화수소",combo:"2H₂O₂ → 2H₂O + O₂",desc:"분해되면 물과 산소를 만들 수 있는 화합물이에요."},
+  {id:"Ag2O",formula:"Ag₂O",name:"산화은",combo:"2Ag₂O → 4Ag + O₂",desc:"분해 반응으로 은과 산소를 확인할 수 있어요."},
+  {id:"NaHCO3",formula:"NaHCO₃",name:"탄산수소나트륨",combo:"2NaHCO₃ → Na₂CO₃ + CO₂ + H₂O",desc:"가열하면 여러 생성물로 나뉘는 화합물이에요."},
+  {id:"Na2CO3",formula:"Na₂CO₃",name:"탄산나트륨",combo:"2NaHCO₃ → Na₂CO₃ + CO₂ + H₂O",desc:"탄산수소나트륨 분해에서 만들어지는 생성물이에요."},
+  {id:"AgNO3",formula:"AgNO₃",name:"질산은",combo:"2AgNO₃ + Cu → Cu(NO₃)₂ + 2Ag",desc:"구리와 만나 치환 반응을 보여주는 화합물이에요."},
+  {id:"CuNO32",formula:"Cu(NO₃)₂",name:"질산구리",combo:"2AgNO₃ + Cu → Cu(NO₃)₂ + 2Ag",desc:"질산은과 구리의 치환 반응에서 생기는 생성물이에요."},
+  {id:"HCl",formula:"HCl",name:"염산",combo:"Zn + 2HCl → ZnCl₂ + H₂",desc:"염화수소(HCl)가 물에 녹은 산성 용액이에요. 아연과 반응해 수소를 내요."},
+  {id:"ZnCl2",formula:"ZnCl₂",name:"염화아연",combo:"Zn + 2HCl → ZnCl₂ + H₂",desc:"아연이 수소를 밀어낸 뒤 만들어지는 염이에요."},
+  {id:"HNO3",formula:"HNO₃",name:"질산",combo:"Mg + 2HNO₃ → Mg(NO₃)₂ + H₂",desc:"강한 산이에요. 아주 묽은 질산은 마그네슘과 반응해 수소를 내요."},
+  {id:"MgNO32",formula:"Mg(NO₃)₂",name:"질산마그네슘",combo:"Mg + 2HNO₃ → Mg(NO₃)₂ + H₂",desc:"마그네슘 치환 반응에서 생기는 생성물이에요."},
+  {id:"CuCl2",formula:"CuCl₂",name:"염화구리",combo:"Mg + CuCl₂ → MgCl₂ + Cu",desc:"마그네슘과 만나 구리를 내어주는 화합물이에요."},
+  {id:"MgCl2",formula:"MgCl₂",name:"염화마그네슘",combo:"Mg + CuCl₂ → MgCl₂ + Cu",desc:"마그네슘이 구리를 밀어낸 뒤 만들어지는 염이에요."}
+];
+const REACTIONS=[
+{id:"p1-h2o",part:"Part 1",partName:"기초 원소 조합",type:"결합 반응",name:"물",formula:"H₂O",learningEquation:"H + H + O → H₂O",realEquation:"2H₂ + O₂ → 2H₂O",description:"수소와 산소가 만나 물이 되었어요.",resultIds:["H2O"]},
+{id:"p1-co2",part:"Part 1",partName:"기초 원소 조합",type:"결합 반응",name:"이산화탄소",formula:"CO₂",learningEquation:"C + O + O → CO₂",realEquation:"C + O₂ → CO₂",description:"탄소와 산소가 만나 이산화탄소가 되었어요.",resultIds:["CO2"]},
+{id:"p1-nh3",part:"Part 1",partName:"기초 원소 조합",type:"결합 반응",name:"암모니아",formula:"NH₃",learningEquation:"N + H + H + H → NH₃",realEquation:"N₂ + 3H₂ → 2NH₃",description:"질소와 수소가 만나 암모니아가 되었어요.",resultIds:["NH3"]},
+{id:"p1-nacl",part:"Part 1",partName:"기초 원소 조합",type:"결합 반응",name:"염화나트륨",formula:"NaCl",learningEquation:"Na + Cl → NaCl",realEquation:"2Na + Cl₂ → 2NaCl",description:"나트륨과 염소가 만나 만들어지는 대표적인 염입니다.",resultIds:["NaCl"]},
+{id:"p2-cuo",part:"Part 2",partName:"결합 반응",type:"결합 반응",name:"산화구리",formula:"CuO",learningEquation:"Cu + O → CuO",realEquation:"2Cu + O₂ → 2CuO",description:"구리와 산소가 결합해 산화구리가 되었어요.",resultIds:["CuO"]},
+{id:"p2-h2o",part:"Part 2",partName:"결합 반응",type:"결합 반응",name:"물",formula:"H₂O",learningEquation:"H + H + O → H₂O",realEquation:"2H₂ + O₂ → 2H₂O",description:"수소와 산소가 결합해 물이 되었어요.",resultIds:["H2O"]},
+{id:"p2-nacl",part:"Part 2",partName:"결합 반응",type:"결합 반응",name:"염화나트륨",formula:"NaCl",learningEquation:"Na + Cl → NaCl",realEquation:"2Na + Cl₂ → 2NaCl",description:"나트륨과 염소가 결합해 염화나트륨이 되었어요.",resultIds:["NaCl"]},
+{id:"p2-nh3",part:"Part 2",partName:"결합 반응",type:"결합 반응",name:"암모니아",formula:"NH₃",learningEquation:"N + H + H + H → NH₃",realEquation:"N₂ + 3H₂ → 2NH₃",description:"질소와 수소가 결합해 암모니아가 되었어요.",resultIds:["NH3"]},
+{id:"p2-co2",part:"Part 2",partName:"결합 반응",type:"결합 반응",name:"이산화탄소",formula:"CO₂",learningEquation:"C + O + O → CO₂",realEquation:"C + O₂ → CO₂",description:"탄소와 산소가 결합해 이산화탄소가 되었어요.",resultIds:["CO2"]},
+{id:"p3-h2o",part:"Part 3",partName:"분해 반응",type:"분해 반응",name:"물 분해",formula:"H₂O",learningEquation:"H₂O + H₂O → H₂ + H₂ + O₂",realEquation:"2H₂O → 2H₂ + O₂",description:"물에 전류를 흘려(전기 분해) 수소와 산소로 나누었어요. 수소 : 산소 부피비는 2 : 1이에요.",resultIds:["H2","O2"]},
+{id:"p3-h2o2",part:"Part 3",partName:"분해 반응",type:"분해 반응",name:"과산화수소 분해",formula:"H₂O₂",learningEquation:"H₂O₂ + H₂O₂ → H₂O + H₂O + O₂",realEquation:"2H₂O₂ → 2H₂O + O₂",description:"촉매(이산화 망가니즈)를 넣으면 과산화수소가 물과 산소로 빠르게 나뉘어요.",resultIds:["H2O","O2"]},
+{id:"p3-ag2o",part:"Part 3",partName:"분해 반응",type:"분해 반응",name:"산화은 분해",formula:"Ag₂O",learningEquation:"Ag₂O + Ag₂O → Ag + Ag + Ag + Ag + O₂",realEquation:"2Ag₂O → 4Ag + O₂",description:"산화은을 가열하면 은과 산소로 나뉘어요.",resultIds:["Ag","O2"]},
+{id:"p3-nahco3",part:"Part 3",partName:"분해 반응",type:"분해 반응",name:"탄산수소나트륨 분해",formula:"NaHCO₃",learningEquation:"NaHCO₃ + NaHCO₃ → Na₂CO₃ + CO₂ + H₂O",realEquation:"2NaHCO₃ → Na₂CO₃ + CO₂ + H₂O",description:"탄산수소나트륨을 가열하면 탄산나트륨, 이산화탄소, 물로 나뉘어요.",resultIds:["Na2CO3","CO2","H2O"]},
+{id:"p4-agno3-cu",part:"Part 4",partName:"치환 반응",type:"치환 반응",name:"질산은과 구리",formula:"Cu(NO₃)₂",learningEquation:"AgNO₃ + AgNO₃ + Cu → Cu(NO₃)₂ + Ag + Ag",realEquation:"2AgNO₃ + Cu → Cu(NO₃)₂ + 2Ag",description:"반응성이 큰 구리가 은 이온을 밀어내고 은이 생겼어요. 용액은 점점 푸른색이 돼요.",resultIds:["CuNO32","Ag"]},
+{id:"p4-hcl-zn",part:"Part 4",partName:"치환 반응",type:"치환 반응",name:"염산과 아연",formula:"ZnCl₂",learningEquation:"HCl + HCl + Zn → ZnCl₂ + H₂",realEquation:"Zn + 2HCl → ZnCl₂ + H₂",description:"아연이 염산 속 수소를 밀어내며 염화아연과 수소 기체가 생겼어요.",resultIds:["ZnCl2","H2"]},
+{id:"p4-hno3-mg",part:"Part 4",partName:"치환 반응",type:"치환 반응",name:"질산과 마그네슘",formula:"Mg(NO₃)₂",learningEquation:"HNO₃ + HNO₃ + Mg → Mg(NO₃)₂ + H₂",realEquation:"Mg + 2HNO₃ → Mg(NO₃)₂ + H₂",description:"아주 묽은 질산과 마그네슘은 예외적으로 수소를 내요. 질산은 보통 수소 대신 NO, NO₂ 같은 기체를 내요.",resultIds:["MgNO32","H2"]},
+{id:"p4-mg-cucl2",part:"Part 4",partName:"치환 반응",type:"치환 반응",name:"마그네슘과 염화구리",formula:"MgCl₂",learningEquation:"Mg + CuCl₂ → MgCl₂ + Cu",realEquation:"Mg + CuCl₂ → MgCl₂ + Cu",description:"반응성이 큰 마그네슘이 구리 이온을 밀어내고 붉은 구리가 생겼어요.",resultIds:["MgCl2","Cu"]}
+];
+const REACTION_INPUTS={"p1-h2o":["H","H","O"],"p1-co2":["C","O","O"],"p1-nh3":["N","H","H","H"],"p1-nacl":["Na","Cl"],"p2-cuo":["Cu","O"],"p2-h2o":["H","H","O"],"p2-nacl":["Na","Cl"],"p2-nh3":["N","H","H","H"],"p2-co2":["C","O","O"],"p3-h2o":["H2O","H2O"],"p3-h2o2":["H2O2","H2O2"],"p3-ag2o":["Ag2O","Ag2O"],"p3-nahco3":["NaHCO3","NaHCO3"],"p4-agno3-cu":["AgNO3","AgNO3","Cu"],"p4-hcl-zn":["HCl","HCl","Zn"],"p4-hno3-mg":["HNO3","HNO3","Mg"],"p4-mg-cucl2":["Mg","CuCl2"]};
+const TYPES=[
+  {id:"combination",name:"결합 반응",desc:"두 가지 이상의 물질이 만나 한 가지 새로운 물질이 되는 반응",example:"2H₂ + O₂ → 2H₂O"},
+  {id:"decomposition",name:"분해 반응",desc:"한 가지 화합물이 두 가지 이상의 물질로 나뉘는 반응",example:"2H₂O → 2H₂ + O₂"},
+  {id:"replacement",name:"치환 반응",desc:"반응성이 큰 원소가 화합물 속 다른 원소를 밀어내고 그 자리를 차지하는 반응",example:"2HCl + Zn → ZnCl₂ + H₂"}
+];
+const META=Object.fromEntries([...ELEMENTS,...COMPOUNDS,{id:"H2",formula:"H₂",name:"수소"},{id:"O2",formula:"O₂",name:"산소"}].map(x=>[x.id,x]));
+const byId=Object.fromEntries(REACTIONS.map(r=>[r.id,r]));
+const safeParse=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}};
+const setFrom=(...keys)=>new Set(keys.flatMap(k=>safeParse(k,[])).map(v=>typeof v==="string"?v:v.id).filter(Boolean));
+const reactionObjects=()=>{const raw=[...safeParse("discoveredReactions",[]),...safeParse("chem_discovered_reactions",[])];const ids=new Set();const out=[];raw.forEach(v=>{const id=typeof v==="string"?v:v&&v.id;if(!id||ids.has(id))return;ids.add(id);out.push(byId[id]||(typeof v==="object"&&v.name?v:null)) /* canonical reaction data */});return out.filter(Boolean)};
+let discoveredElements=setFrom("discoveredElements","chem_discovered_elements");
+let discoveredCompounds=setFrom("discoveredCompounds","chem_discovered_compounds");
+let discoveredReactions=reactionObjects();
+discoveredReactions.forEach(r=>{[...(r.inputIds||REACTION_INPUTS[r.id]||[]),...(r.resultIds||r.productIds||[])].forEach(id=>{if(ELEMENTS.some(e=>e.id===id))discoveredElements.add(id);if(COMPOUNDS.some(c=>c.id===id))discoveredCompounds.add(id)})});
+let discoveredTypes=new Set([...safeParse("discoveredReactionTypes",[]),...discoveredReactions.map(r=>r.type)].filter(t=>TYPES.some(x=>x.name===t)));
+const el=(id)=>document.getElementById(id);
+const countText=(n,total)=>`발견 ${n} / ${total}`;
+function renderStats(){const items=[{label:"발견한 원소",now:discoveredElements.size,total:ELEMENTS.length},{label:"발견한 화합물",now:discoveredCompounds.size,total:COMPOUNDS.length},{label:"성공한 반응식",now:discoveredReactions.length,total:REACTIONS.length},{label:"반응 유형",now:discoveredTypes.size,total:TYPES.length}];el("statsGrid").innerHTML=items.map(x=>`<div class="stat"><small>${x.label}</small><strong>${x.now} / ${x.total}</strong></div>`).join("")}
+function renderElements(){el("elementCount").textContent=countText(discoveredElements.size,ELEMENTS.length);el("elements").innerHTML=ELEMENTS.map(x=>{const on=discoveredElements.has(x.id);return `<article class="card element-card ${on?"":"locked"}"><div class="badge ${on?"check":"lock"}">${on?"✓":"🔒"}</div><div class="character ${on?x.id:"unknown"}">${on?x.formula:"?"}</div><h3>${on?x.name:"잠긴 원소"}</h3><div class="element-status">${on?x.state:"????"}</div><p>${on?x.desc:"조합해서 발견해 보세요."}</p></article>`}).join("")}
+function renderCompounds(){el("compoundCount").textContent=countText(discoveredCompounds.size,COMPOUNDS.length);el("compounds").innerHTML=COMPOUNDS.map(x=>{const on=discoveredCompounds.has(x.id);return `<article class="card compound-card ${on?"":"locked"}"><div class="badge ${on?"check":"lock"}">${on?"✓":"🔒"}</div><div class="visual ${on?x.id:"unknown"}"><strong>${on?x.formula:"?"}</strong><span>${on?x.name:"잠긴 화합물"}</span></div><div class="compound-info"><div><span class="label">조합 카드</span><span class="equation">${on?x.combo:"? → ?"}</span></div><p>${on?x.desc:"보드에서 직접 조합해 잠금을 풀어보세요."}</p></div></article>`}).join("")}
+function renderReactions(){el("reactionCount").textContent=`성공 ${discoveredReactions.length} / ${REACTIONS.length}`;el("reactions").innerHTML=discoveredReactions.length?discoveredReactions.map(r=>`<article class="card reaction-card"><div class="reaction-top"><span class="pill">${r.type}</span><span class="part">${r.part} · ${r.partName||""}</span></div><h3>${r.name} <span>${r.formula}</span></h3><div class="reaction-lines"><div class="linebox"><strong>학습용 조합</strong><span>${r.learningEquation}</span></div><div class="linebox real"><strong>실제 반응식</strong><span>${r.realEquation}</span></div><p>${r.description}</p></div></article>`).join(""):`<div class="empty-note">아직 성공한 반응식이 없어요. 파트에서 조합에 성공하면 자세한 반응식이 이곳에 정리됩니다.</div>`}
+function renderTypes(){el("typeCount").textContent=countText(discoveredTypes.size,TYPES.length);el("types").innerHTML=TYPES.map(t=>{const on=discoveredTypes.has(t.name);return `<article class="card type-card ${on?"":"locked"}"><div class="type-head"><div class="type-icon">${on?"✓":"🔒"}</div><span class="section-kicker">${on?"DISCOVERED":"LOCKED"}</span></div><h3>${t.name}</h3><p>${t.desc}</p><div class="type-example"><span class="label">예</span><span class="equation">${t.example}</span></div></article>`}).join("")}
+function render(){renderStats();renderElements();renderCompounds();renderReactions();renderTypes()}
+el("resetButton").addEventListener("click",()=>{if(!confirm("발견 기록을 모두 초기화할까요?"))return;["discoveredElements","discoveredCompounds","discoveredReactions","discoveredReactionTypes","chem_discovered_elements","chem_discovered_compounds","chem_discovered_reactions"].forEach(k=>localStorage.removeItem(k));discoveredElements=new Set();discoveredCompounds=new Set();discoveredReactions=[];discoveredTypes=new Set();render()});
+render();
+</script>
+</body>
+</html>
+
+
+
